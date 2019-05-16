@@ -1,0 +1,31 @@
+E:\1 DAM\Programación\DigDug\DigDug\bin\Debug\Pokemon.exe.config
+E:\1 DAM\Programación\DigDug\DigDug\bin\Debug\Pokemon.exe
+E:\1 DAM\Programación\DigDug\DigDug\bin\Debug\Pokemon.pdb
+E:\1 DAM\Programación\DigDug\DigDug\obj\Debug\Pokemon.csproj.CoreCompileInputs.cache
+E:\1 DAM\Programación\DigDug\DigDug\obj\Debug\Pokemon.csproj.CopyComplete
+E:\1 DAM\Programación\DigDug\DigDug\obj\Debug\Pokemon.exe
+E:\1 DAM\Programación\DigDug\DigDug\obj\Debug\Pokemon.pdb
+E:\1 DAM\Programación\Pokemon\DigDug\bin\Debug\Pokemon.exe.config
+E:\1 DAM\Programación\Pokemon\DigDug\bin\Debug\Pokemon.exe
+E:\1 DAM\Programación\Pokemon\DigDug\bin\Debug\Pokemon.pdb
+E:\1 DAM\Programación\Pokemon\DigDug\obj\Debug\Pokemon.csprojAssemblyReference.cache
+E:\1 DAM\Programación\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CoreCompileInputs.cache
+E:\1 DAM\Programación\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CopyComplete
+E:\1 DAM\Programación\Pokemon\DigDug\obj\Debug\Pokemon.exe
+E:\1 DAM\Programación\Pokemon\DigDug\obj\Debug\Pokemon.pdb
+E:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\bin\Debug\Pokemon.exe.config
+E:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\bin\Debug\Pokemon.exe
+E:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\bin\Debug\Pokemon.pdb
+E:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.csprojAssemblyReference.cache
+E:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CoreCompileInputs.cache
+E:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CopyComplete
+E:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.exe
+E:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.pdb
+I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\bin\Debug\Pokemon.exe.config
+I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\bin\Debug\Pokemon.exe
+I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\bin\Debug\Pokemon.pdb
+I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.csprojAssemblyReference.cache
+I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CoreCompileInputs.cache
+I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CopyComplete
+I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.exe
+I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.pdb
