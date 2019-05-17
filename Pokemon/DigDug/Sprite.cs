@@ -6,26 +6,28 @@
  */
 
 
-public class Sprite
+class Sprite
 {
-    public int x { get; set; }
-    public int y { get; set; }
+    protected int x, y;
     protected int startX, startY;
-    public int width { get; set; }
-    public int height { get; set; }
+    protected int width, height;
     protected int xSpeed, ySpeed;
     protected bool visible;
-    public Image image;
-    public Image[][] sequence;
+    protected Image image;
+    protected Image[][] sequence;
     protected bool containsSequence;
     protected int currentFrame;
 
-    protected byte numDirections = 4;
+    protected byte numDirections = 8;
     protected byte currentDirection;
     public const byte RIGHT = 0;
     public const byte LEFT = 1;
     public const byte DOWN = 2;
     public const byte UP = 3;
+    public const byte DOWNRIGHT = 4;
+    public const byte DOWNLEFT = 5;
+    public const byte UPRIGHT = 6;
+    public const byte UPLEFT = 7;
 
     public Sprite()
     {
