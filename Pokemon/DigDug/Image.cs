@@ -11,7 +11,7 @@ using System;
 using Tao.Sdl;
 
 
-class Image
+public class Image
 {
     private IntPtr internalPointer;
 
