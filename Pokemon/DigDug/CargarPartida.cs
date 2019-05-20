@@ -4,6 +4,7 @@ class CargarPartida : Menu
 {   
     protected bool partidaElegida;
     protected string nombrePartida;
+    Mapa cargarMapa;
 
     public CargarPartida()
     {
@@ -12,6 +13,8 @@ class CargarPartida : Menu
         seleccion = 1;
         posicionFlecha = 200;
         partidaElegida = false;
+        cargarMapa = new Mapa();
+        cargarMapa.CargarMapa("data/mapa.txt");
         CargarNombres(ref listaNombres);
         try
         {
@@ -21,7 +24,6 @@ class CargarPartida : Menu
         {
             maxOpciones = 0;
         }
-        Console.WriteLine(maxOpciones);
     }
 
     public override void DibujarInterfaz()
@@ -113,9 +115,9 @@ class CargarPartida : Menu
     {
             DibujarInterfaz();
             Jugador nuevoJugador = new Jugador();
-            nuevoJugador.cargarJugador("partidas/"+ nombrePartida + ".txt");
+            nuevoJugador.cargarJugador("partidas/"+ nombrePartida + ".txt",ref cargarMapa);
             //CargarNPCS -- Futuro
-            Juego j = new Juego(nuevoJugador);
+            Juego j = new Juego(nuevoJugador,cargarMapa);
             j.Run();
         
     }

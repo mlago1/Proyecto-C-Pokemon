@@ -8,6 +8,7 @@ class NuevaPartida : Menu
     int indiceGenero;
     string nombrePJ,genero, errorNombre;
     Image bg2;
+    Mapa cargarMapa;
 
     public NuevaPartida()
     {
@@ -23,6 +24,8 @@ class NuevaPartida : Menu
         genero = "Hombre";
         CargarNombres(ref listaNombres);
         errorNombre = "El nombre no puede estar vacio";
+        cargarMapa = new Mapa();
+        cargarMapa.CargarMapa("data/mapa.txt");
     }
 
     public void IntroducirTecla()
@@ -157,12 +160,14 @@ class NuevaPartida : Menu
     {
         nombrePJ = nombrePJ.Trim();
         Jugador nuevoJugador = new Jugador(nombrePJ, genero);
-        nuevoJugador.guardarJugador("partidas/" + nombrePJ + ".txt");
+        nuevoJugador.guardarJugador("partidas/" + nombrePJ + ".txt", ref cargarMapa);
         StreamWriter escribir = new StreamWriter("partidas/listaPartidas.txt", true);
         escribir.WriteLine(nombrePJ);
         escribir.Close();
         //GuardarNpcsPredefinidos y cargarlos -- FUTURO
-        Juego j = new Juego(nuevoJugador);
+        Instrucciones i = new Instrucciones();
+        i.Run();
+        Juego j = new Juego(nuevoJugador, cargarMapa);
         j.Run();
     }
 

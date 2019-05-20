@@ -11,17 +11,16 @@ class Juego
     Font font18;
     protected bool dibujarDialogo;
 
-    public Juego(Jugador protagonista)
+    public Juego(Jugador protagonista, Mapa mapa)
     {
         bucle = true;
         this.protagonista = protagonista;
         this.protagonista.MoveTo(512, 450);
         font18 = new Font("data/Joystix.ttf", 18);
         fondo = new Image("data/fondo_juego.jpg");
-        mapa = new Mapa();
+        this.mapa = mapa;
         npcs = new List<Npc>();
         CargarNpc();
-        mapa.CargarMapa("data/mapa.txt");
         dibujarDialogo = false;
     }
 
@@ -30,9 +29,9 @@ class Juego
         Random r = new Random(); //PROVISIONAL
         npcs.Add(new Npc("data/prota_hombre/maleDownBase.png"));
         npcs.Add(new Npc("data/prota_mujer/femaleDownBase.png"));
-        foreach(Npc npc in npcs)
+        foreach (Npc npc in npcs)
         {
-            npc.MoveTo(r.Next(400,500), r.Next(400, 500));
+            npc.MoveTo(r.Next(400, 600), r.Next(400, 600));
             npc.Dialogo.Add("Hola");
             npc.Dialogo.Add("Adios");
             npc.Dialogo.Add("Que tal");
@@ -43,7 +42,7 @@ class Juego
     {
         SdlHardware.ClearScreen();
         SdlHardware.DrawHiddenImage(fondo, 0, 0);
-        
+
         foreach (Arbol arbol in mapa.Arboles)
         {
             arbol.DrawOnHiddenScreen();
@@ -62,8 +61,10 @@ class Juego
             npc.DrawOnHiddenScreen();
             if (npc.Hablando)
             {
-                SdlHardware.DrawHiddenImage(new Image("data/fondo_dialogo.png"), 0, 500);
-                SdlHardware.WriteHiddenText(npc.Dialogo[npc.IndiceDialogo],
+                SdlHardware.DrawHiddenImage(
+                    new Image("data/fondo_dialogo.png"), 0, 500);
+                SdlHardware.WriteHiddenText(
+                    npc.Dialogo[npc.IndiceDialogo],
                     50, 550,
                     0, 0, 0,
                     font18);
@@ -77,7 +78,7 @@ class Juego
     {
         foreach (Arbol arbol in mapa.Arboles)
         {
-            arbol.MoveTo(arbol.GetX()+X,arbol.GetY()+Y);
+            arbol.MoveTo(arbol.GetX() + X, arbol.GetY() + Y);
         }
         foreach (Edificio edificio in mapa.Edificios)
         {
@@ -97,12 +98,13 @@ class Juego
     {
         if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
         {
-            foreach(Npc npc in npcs)
+            foreach (Npc npc in npcs)
             {
-                if(protagonista.CollisionsWith(npc))
+                if (protagonista.CollisionsWith(npc))
                 {
-                    switch(protagonista.currentDirection)
+                    switch (protagonista.currentDirection)
                     {
+                        //PROVISIONAL
                         case Sprite.DOWN:
                             npc.ChangeDirection(Sprite.UP);
                             break;
@@ -116,6 +118,7 @@ class Juego
                             npc.ChangeDirection(Sprite.LEFT);
                             break;
                     }
+
                     npc.Hablando = true;
                     dibujarDialogo = true;
                     protagonista.Hablando = true;
@@ -139,53 +142,63 @@ class Juego
                         protagonista.Hablando = false;
                         npc.IndiceDialogo = 0;
                     }
-                    SdlHardware.Pause(100);
-                }
-            }
-            if(!protagonista.Hablando)
-            {
-                if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
-                {
-                    if (protagonista.PuedeMoverse(protagonista, mapa.Arboles, mapa.Edificios, npcs))
-                        MoverMundo(0, -10);
-                    else
-                        MoverMundo(0, 20);
-
-                    protagonista.ChangeDirection(Sprite.DOWN);
-                    protagonista.NextFrame();
-                }
-                else if (SdlHardware.KeyPressed(SdlHardware.KEY_UP))
-                {
-                    if (protagonista.PuedeMoverse(protagonista, mapa.Arboles, mapa.Edificios, npcs))
-                        MoverMundo(0, 10);
-                    else
-                        MoverMundo(0, -20);
-
-                    protagonista.ChangeDirection(Sprite.UP);
-                    protagonista.NextFrame();
-                }
-                else if (SdlHardware.KeyPressed(SdlHardware.KEY_LEFT))
-                {
-                    if (protagonista.PuedeMoverse(protagonista, mapa.Arboles, mapa.Edificios, npcs))
-                        MoverMundo(10, 0);
-                    else
-                        MoverMundo(-20, 0);
-
-                    protagonista.ChangeDirection(Sprite.LEFT);
-                    protagonista.NextFrame();
-                }
-                else if (SdlHardware.KeyPressed(SdlHardware.KEY_RIGHT))
-                {
-                    if (protagonista.PuedeMoverse(protagonista, mapa.Arboles, mapa.Edificios, npcs))
-                        MoverMundo(-10, 0);
-                    else
-                        MoverMundo(20, 0);
-
-                    protagonista.ChangeDirection(Sprite.RIGHT);
-                    protagonista.NextFrame();
+                    SdlHardware.Pause(40);
                 }
             }
         }
+        if (!protagonista.Hablando)
+        {
+            if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
+            {
+                if (protagonista.PuedeMoverse(
+                        protagonista, mapa.Arboles, mapa.Edificios, npcs))
+                    MoverMundo(0, -10);
+                else
+                    MoverMundo(0, 20);
+
+                protagonista.ChangeDirection(Sprite.DOWN);
+                protagonista.NextFrame();
+            }
+            else if (SdlHardware.KeyPressed(SdlHardware.KEY_UP))
+            {
+                if (protagonista.PuedeMoverse(
+                        protagonista, mapa.Arboles, mapa.Edificios, npcs))
+                    MoverMundo(0, 10);
+                else
+                    MoverMundo(0, -20);
+
+                protagonista.ChangeDirection(Sprite.UP);
+                protagonista.NextFrame();
+            }
+            else if (SdlHardware.KeyPressed(SdlHardware.KEY_LEFT))
+            {
+                if (protagonista.PuedeMoverse(
+                        protagonista, mapa.Arboles, mapa.Edificios, npcs))
+                    MoverMundo(10, 0);
+                else
+                    MoverMundo(-20, 0);
+
+                protagonista.ChangeDirection(Sprite.LEFT);
+                protagonista.NextFrame();
+            }
+            else if (SdlHardware.KeyPressed(SdlHardware.KEY_RIGHT))
+            {
+                if (protagonista.PuedeMoverse(
+                        protagonista, mapa.Arboles, mapa.Edificios, npcs))
+                    MoverMundo(-10, 0);
+                else
+                    MoverMundo(20, 0);
+
+                protagonista.ChangeDirection(Sprite.RIGHT);
+                protagonista.NextFrame();
+            }
+            else if (SdlHardware.KeyPressed(SdlHardware.KEY_M))
+            {
+                MenuJugador mj = new MenuJugador(protagonista, mapa);
+                mj.Run();
+            }
+        }
+
         if (SdlHardware.KeyPressed(SdlHardware.KEY_K))
         {
             SdlHardware.Pause(100);

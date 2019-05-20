@@ -28,6 +28,27 @@ public class Jugador : Sprite
     {
         
     }
+
+    public string GetNombre()
+    {
+        return nombre;
+    }
+
+    public string GetGenero()
+    {
+        return genero;
+    }
+
+    public int GetDinero()
+    {
+        return dinero;
+    }
+
+    public int GetTiempoJugado() //PROVISIONAL
+    {
+        return tiempoJugado;
+    }
+
     void CargarMujer()
     {
         LoadSequence(RIGHT,
@@ -80,15 +101,32 @@ public class Jugador : Sprite
         currentDirection = LEFT;
     }
 
-    public void guardarJugador(string partida)
+    public void guardarJugador(string partida, ref Mapa cargarMapa)
     {
         try
         {
+            SdlHardware.DrawHiddenImage(new Image("data/cargando.png"), 0, 0);
+            SdlHardware.ShowHiddenScreen();
             StreamWriter escribir = new StreamWriter(partida);
             escribir.WriteLine(nombre);
             escribir.WriteLine(genero);
             escribir.WriteLine(dinero);
             escribir.WriteLine(0);
+            foreach (Arbol arbol in cargarMapa.Arboles)
+            {
+                escribir.WriteLine(arbol.x);
+                escribir.WriteLine(arbol.y);
+            }
+            foreach (Edificio edificio in cargarMapa.Edificios)
+            {
+                escribir.WriteLine(edificio.x);
+                escribir.WriteLine(edificio.y);
+            }
+            foreach (Hierba hierba in cargarMapa.Hierbas)
+            {
+                escribir.WriteLine(hierba.x);
+                escribir.WriteLine(hierba.y);
+            }
             escribir.Close();
         }
         catch(Exception e)
@@ -97,18 +135,38 @@ public class Jugador : Sprite
         }
     }
 
-    public void cargarJugador(string partida)
+    public void cargarJugador(string partida, ref Mapa cargarMapa)
     {
         try
         {
+            SdlHardware.DrawHiddenImage(new Image("data/cargando.png"), 0, 0);
+            SdlHardware.ShowHiddenScreen();
             StreamReader leer = new StreamReader(partida);
             nombre = leer.ReadLine();
             genero = leer.ReadLine();
             if (genero == "Hombre")
                 CargarHombre();
+            else
+                CargarMujer();
 
             dinero = Convert.ToInt32(leer.ReadLine());
             tiempoJugado = Convert.ToInt32(leer.ReadLine());
+            foreach (Arbol arbol in cargarMapa.Arboles)
+            {
+                arbol.x = Convert.ToInt32(leer.ReadLine());
+                arbol.y = Convert.ToInt32(leer.ReadLine());
+            }
+            foreach (Edificio edificio in cargarMapa.Edificios)
+            {
+                edificio.x = Convert.ToInt32(leer.ReadLine());
+                edificio.y = Convert.ToInt32(leer.ReadLine());
+            }
+            foreach (Hierba hierba in cargarMapa.Hierbas)
+            {
+                hierba.x = Convert.ToInt32(leer.ReadLine());
+                hierba.y = Convert.ToInt32(leer.ReadLine());
+            }
+
             leer.Close();
         }
         catch (Exception e)

@@ -56,10 +56,13 @@
     <Compile Include="Font.cs" />
     <Compile Include="Hierba.cs" />
     <Compile Include="Image.cs" />
+    <Compile Include="InformacionJugador.cs" />
+    <Compile Include="Instrucciones.cs" />
     <Compile Include="Juego.cs" />
     <Compile Include="Jugador.cs" />
     <Compile Include="Mapa.cs" />
     <Compile Include="Menu.cs" />
+    <Compile Include="MenuJugador.cs" />
     <Compile Include="MenuPartidas.cs" />
     <Compile Include="Npc.cs" />
     <Compile Include="NuevaPartida.cs" />
