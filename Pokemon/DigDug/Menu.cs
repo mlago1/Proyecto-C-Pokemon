@@ -9,6 +9,7 @@ abstract class Menu
     protected int seleccion, maxOpciones;
     protected short posicionFlecha;
     protected List<string> listaNombres;
+    protected bool continuar;
 
     public void SinPartidas()
     {

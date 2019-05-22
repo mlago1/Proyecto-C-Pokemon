@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 
 class Juego
@@ -36,6 +37,22 @@ class Juego
             npc.Dialogo.Add("Adios");
             npc.Dialogo.Add("Que tal");
         }
+    }
+
+    public Bestia CargarPokemonSalvaje()
+    {
+        Bestia devolver = null;
+        try
+        {
+            string[] leer = File.ReadAllLines("data/pokemons/lista_pokemon.txt"); //Provisional, cargar todo en un principio
+            int indice = new Random().Next(0,leer.Length);
+            devolver = new Bestia(leer[indice].Split(';')[0], leer[indice].Split(';')[1]);
+        }
+        catch(Exception e)
+        {
+
+        }
+        return devolver;
     }
 
     public void DibujarJuego()
@@ -91,6 +108,22 @@ class Juego
         foreach (Npc npc in npcs)
         {
             npc.MoveTo(npc.GetX() + X, npc.GetY() + Y);
+        }
+    }
+
+    private void BuscarCombateSalvaje()
+    {
+        foreach (Hierba hierba in mapa.Hierbas)
+        {
+            if(protagonista.CollisionsWith(hierba))
+            {
+                if (new Random().Next(1, 100) <= 5 ? true : false)
+                {
+                    Combate combate = new Combate(
+                        protagonista,CargarPokemonSalvaje());
+                    combate.Run();
+                }
+            }
         }
     }
 
@@ -155,7 +188,7 @@ class Juego
                     MoverMundo(0, -10);
                 else
                     MoverMundo(0, 20);
-
+                BuscarCombateSalvaje();
                 protagonista.ChangeDirection(Sprite.DOWN);
                 protagonista.NextFrame();
             }
@@ -166,7 +199,7 @@ class Juego
                     MoverMundo(0, 10);
                 else
                     MoverMundo(0, -20);
-
+                BuscarCombateSalvaje();
                 protagonista.ChangeDirection(Sprite.UP);
                 protagonista.NextFrame();
             }
@@ -177,7 +210,7 @@ class Juego
                     MoverMundo(10, 0);
                 else
                     MoverMundo(-20, 0);
-
+                BuscarCombateSalvaje();
                 protagonista.ChangeDirection(Sprite.LEFT);
                 protagonista.NextFrame();
             }
@@ -188,7 +221,7 @@ class Juego
                     MoverMundo(-10, 0);
                 else
                     MoverMundo(20, 0);
-
+                BuscarCombateSalvaje();
                 protagonista.ChangeDirection(Sprite.RIGHT);
                 protagonista.NextFrame();
             }

@@ -14,9 +14,11 @@ using Tao.Sdl;
 public class Image
 {
     private IntPtr internalPointer;
+    public string nombre { get; set; }
 
     public Image(string fileName)  // Constructor
     {
+        nombre = fileName;
         Load(fileName);
     }
 

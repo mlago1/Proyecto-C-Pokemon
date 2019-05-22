@@ -49,9 +49,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arbol.cs" />
+    <Compile Include="Bestia.cs" />
     <Compile Include="Bienvenida.cs" />
     <Compile Include="BorrarPartida.cs" />
     <Compile Include="CargarPartida.cs" />
+    <Compile Include="Combate.cs" />
     <Compile Include="Edificio.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="Hierba.cs" />

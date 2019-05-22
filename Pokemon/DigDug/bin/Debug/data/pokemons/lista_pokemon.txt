@@ -1,0 +1,3 @@
+bulbasaur;data/pokemons/bulbasaur.png
+charmander;data/pokemons/charmander.png
+squirtle;data/pokemons/squirtle.png

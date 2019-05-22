@@ -160,6 +160,16 @@ class NuevaPartida : Menu
     {
         nombrePJ = nombrePJ.Trim();
         Jugador nuevoJugador = new Jugador(nombrePJ, genero);
+        try
+        {
+            string[] leer = File.ReadAllLines("data/pokemons/lista_pokemon.txt");
+            int r = new Random().Next(1, leer.Length);
+            nuevoJugador.GetEquipo().Add(new Bestia(leer[r].Split(';')[0], leer[r].Split(';')[1]));
+        }
+        catch (Exception e)
+        {
+
+        }
         nuevoJugador.guardarJugador("partidas/" + nombrePJ + ".txt", ref cargarMapa);
         StreamWriter escribir = new StreamWriter("partidas/listaPartidas.txt", true);
         escribir.WriteLine(nombrePJ);

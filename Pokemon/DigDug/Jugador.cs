@@ -9,7 +9,7 @@ public class Jugador : Sprite
     protected int dinero;
     protected int tiempoJugado;
     public bool Hablando { get; set; } //SUBIR A SUPERCLASE
-    //protected List<Pokemons> equipo; /Futuro/
+    protected List<Bestia> equipo;
 
     public Jugador(string nombre, string genero)
     {
@@ -22,16 +22,23 @@ public class Jugador : Sprite
         else
             CargarMujer();
         Hablando = false;
+        equipo = new List<Bestia>();
     }
 
     public Jugador()
     {
-        
+        Hablando = false;
+        equipo = new List<Bestia>();
     }
 
     public string GetNombre()
     {
         return nombre;
+    }
+
+    public List<Bestia> GetEquipo()
+    {
+        return equipo;
     }
 
     public string GetGenero()
@@ -127,6 +134,13 @@ public class Jugador : Sprite
                 escribir.WriteLine(hierba.x);
                 escribir.WriteLine(hierba.y);
             }
+            foreach (Bestia bestia in equipo)
+            {
+                escribir.WriteLine(bestia.image.nombre);
+                escribir.WriteLine(bestia.GetNombre());
+                escribir.WriteLine(bestia.GetNivel());
+                escribir.WriteLine(bestia.GetVida());
+            }
             escribir.Close();
         }
         catch(Exception e)
@@ -165,6 +179,16 @@ public class Jugador : Sprite
             {
                 hierba.x = Convert.ToInt32(leer.ReadLine());
                 hierba.y = Convert.ToInt32(leer.ReadLine());
+            }
+            string linea = leer.ReadLine();
+            int i = 0;
+            while(linea != null)
+            {
+                equipo.Add(new Bestia(leer.ReadLine(),linea));
+                equipo[i].SetNivel(Convert.ToInt32(leer.ReadLine()));
+                equipo[i].SetVida(Convert.ToInt32(leer.ReadLine()));
+                linea = leer.ReadLine();
+                i++;
             }
 
             leer.Close();
