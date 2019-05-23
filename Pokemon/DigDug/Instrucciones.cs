@@ -1,6 +1,5 @@
 ﻿class Instrucciones : Menu
 {
-    bool continuar; //SUBIR A SUPERCLASE
     public Instrucciones()
     {
         bg = new Image("data/menu_partidas.png");
@@ -31,7 +30,7 @@
             100, 150,
             0xC0, 0xC0, 0xC0,
             font24);
-        SdlHardware.WriteHiddenText("para moverte",
+        SdlHardware.WriteHiddenText("para moverte / seleccionar opciones",
             100, 200,
             0xC0, 0xC0, 0xC0,
             font24);
@@ -39,7 +38,7 @@
             100, 300,
             0xC0, 0xC0, 0xC0,
             font24);
-        SdlHardware.WriteHiddenText("NPCs",
+        SdlHardware.WriteHiddenText("NPCs/Interactura en general",
             100, 350,
             0xC0, 0xC0, 0xC0,
             font24);

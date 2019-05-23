@@ -1,0 +1,6 @@
+Pistola Agua;Agua;50
+Rayo Hielo;Hielo;70
+Lanzallamas;Fuego;100
+Rayo;Electrico;60
+Tornado;Volador;70
+Salpicadura;Agua;0

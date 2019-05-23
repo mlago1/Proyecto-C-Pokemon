@@ -30,6 +30,7 @@ abstract class Menu
                 SdlHardware.Pause(100);
                 Pokemon.Run();
             }
+            SdlHardware.ShowHiddenScreen();
         }
         while (true);
     }

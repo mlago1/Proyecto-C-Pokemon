@@ -11,9 +11,11 @@ class Juego
     protected Mapa mapa;
     Font font18;
     protected bool dibujarDialogo;
+    Random r;
 
     public Juego(Jugador protagonista, Mapa mapa)
     {
+        r = new Random();
         bucle = true;
         this.protagonista = protagonista;
         this.protagonista.MoveTo(512, 450);
@@ -25,7 +27,7 @@ class Juego
         dibujarDialogo = false;
     }
 
-    public void CargarNpc()
+    private void CargarNpc()
     {
         Random r = new Random(); //PROVISIONAL
         npcs.Add(new Npc("data/prota_hombre/maleDownBase.png"));
@@ -39,13 +41,14 @@ class Juego
         }
     }
 
-    public Bestia CargarPokemonSalvaje()
+    private Bestia CargarPokemonSalvaje()
     {
         Bestia devolver = null;
         try
         {
             string[] leer = File.ReadAllLines("data/pokemons/lista_pokemon.txt"); //Provisional, cargar todo en un principio
-            int indice = new Random().Next(0,leer.Length);
+            int indice = r.Next(0,leer.Length);
+            SdlHardware.Pause(100);
             devolver = new Bestia(leer[indice].Split(';')[0], leer[indice].Split(';')[1]);
         }
         catch(Exception e)
@@ -55,7 +58,7 @@ class Juego
         return devolver;
     }
 
-    public void DibujarJuego()
+    private void DibujarJuego()
     {
         SdlHardware.ClearScreen();
         SdlHardware.DrawHiddenImage(fondo, 0, 0);
@@ -91,7 +94,7 @@ class Juego
         SdlHardware.ShowHiddenScreen();
     }
 
-    public void MoverMundo(int X, int Y)
+    private void MoverMundo(int X, int Y)
     {
         foreach (Arbol arbol in mapa.Arboles)
         {
@@ -117,7 +120,7 @@ class Juego
         {
             if(protagonista.CollisionsWith(hierba))
             {
-                if (new Random().Next(1, 100) <= 5 ? true : false)
+                if (r.Next(1, 100) <= 5 ? true : false)
                 {
                     Combate combate = new Combate(
                         protagonista,CargarPokemonSalvaje());
@@ -127,7 +130,7 @@ class Juego
         }
     }
 
-    public void ComprobarTeclas()
+    private void GestionarConversaciones()
     {
         if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
         {
@@ -179,6 +182,10 @@ class Juego
                 }
             }
         }
+    }
+
+    private void ComprobarTeclas()
+    {
         if (!protagonista.Hablando)
         {
             if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
@@ -244,6 +251,7 @@ class Juego
         do
         {
             DibujarJuego();
+            GestionarConversaciones();
             ComprobarTeclas();
             SdlHardware.Pause(40);
         } while (bucle);

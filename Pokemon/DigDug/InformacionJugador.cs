@@ -1,7 +1,6 @@
 ﻿class InformacionJugador : Menu
 {
     Jugador prota;
-    bool continuar;
 
     public InformacionJugador(Jugador prota)
     {

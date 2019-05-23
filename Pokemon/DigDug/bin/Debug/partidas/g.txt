@@ -1,5 +1,5 @@
-prueba
-Mujer
+g
+Hombre
 0
 0
 0
@@ -1074,7 +1074,4 @@ Mujer
 992
 672
 992
-data/pokemons/squirtle.png
-squirtle
-99
-198
+data/pokemons/squirtle.png;squirtle;95;190;Salpicadura:Agua:0_Lanzallamas:Fuego:100_Pistola Agua:Agua:50_Lanzallamas:Fuego:100

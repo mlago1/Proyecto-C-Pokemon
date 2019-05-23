@@ -16,7 +16,7 @@ class NuevaPartida : Menu
         generoIntroducido = false;
         bg = new Image("data/menu_partidas.png");
         bg2 = new Image("data/menu_seleccion_sprite.jpg");
-        font24 = new Font("data/Joystix.ttf", 35);
+        font24 = new Font("data/Joystix.ttf", 30);
         string[] leer = File.ReadAllLines("partidas/listaPartidas.txt");
         nombrePJ = " ";
         indiceGenero = 0;
@@ -202,7 +202,7 @@ class NuevaPartida : Menu
                     0xC0, 0xC0, 0xC0,
                     font24);
                 SdlHardware.WriteHiddenText(errorNombre,
-                    100, 400,
+                    30, 400,
                     0xC0, 0xC0, 0xC0,
                     font24);
                 SdlHardware.ShowHiddenScreen();

@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arbol.cs" />
+    <Compile Include="Ataque.cs" />
     <Compile Include="Bestia.cs" />
     <Compile Include="Bienvenida.cs" />
     <Compile Include="BorrarPartida.cs" />

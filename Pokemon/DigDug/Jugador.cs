@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using static Ataque;
 
 public class Jugador : Sprite
 {
@@ -136,10 +137,18 @@ public class Jugador : Sprite
             }
             foreach (Bestia bestia in equipo)
             {
-                escribir.WriteLine(bestia.image.nombre);
-                escribir.WriteLine(bestia.GetNombre());
-                escribir.WriteLine(bestia.GetNivel());
-                escribir.WriteLine(bestia.GetVida());
+                escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" + bestia.GetNivel() + ";" + bestia.GetVida() + ";");
+                for(int i = 0; i < bestia.GetAtaques().Count ; i++)
+                {
+                    escribir.Write(bestia.GetAtaques()[i].nombre);
+                    escribir.Write(":" + bestia.GetAtaques()[i].tipo);
+                    escribir.Write(":" + bestia.GetAtaques()[i].poder);
+                    if(i < bestia.GetAtaques().Count - 1)
+                    {
+                        escribir.Write("_");
+                    }
+                }
+                escribir.WriteLine();
             }
             escribir.Close();
         }
@@ -184,9 +193,20 @@ public class Jugador : Sprite
             int i = 0;
             while(linea != null)
             {
-                equipo.Add(new Bestia(leer.ReadLine(),linea));
-                equipo[i].SetNivel(Convert.ToInt32(leer.ReadLine()));
-                equipo[i].SetVida(Convert.ToInt32(leer.ReadLine()));
+                string[] cortar = linea.Split(';');
+                equipo.Add(new Bestia(
+                    cortar[1],cortar[0]));
+                equipo[i].SetNivel(Convert.ToInt32(cortar[2]));
+                equipo[i].SetVida(Convert.ToInt32(cortar[3]));
+                string[] auxCortar = cortar[4].Split('_');
+                int j = 0;
+                foreach(string s in auxCortar)
+                {
+                    string[] auxAuxCortar = s.Split(':');
+                    equipo[i].GetAtaques()[j] = new ataque(auxAuxCortar[0],
+                        auxAuxCortar[1], Convert.ToInt32(auxAuxCortar[2]));
+                    j++;
+                }
                 linea = leer.ReadLine();
                 i++;
             }

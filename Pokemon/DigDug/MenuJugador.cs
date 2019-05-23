@@ -2,7 +2,6 @@
 
 class MenuJugador : Menu
 {
-    bool continuar;
     Jugador prota;
     Mapa mapa;
 
@@ -45,6 +44,7 @@ class MenuJugador : Menu
             {
                 SdlHardware.Pause(100);
             }
+            SdlHardware.ShowHiddenScreen();
 
         } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
     }
