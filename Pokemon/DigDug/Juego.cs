@@ -46,10 +46,11 @@ class Juego
         Bestia devolver = null;
         try
         {
-            string[] leer = File.ReadAllLines("data/pokemons/lista_pokemon.txt"); //Provisional, cargar todo en un principio
+            string[] leer = File.ReadAllLines("data/pokemons/lista_pokemon.txt"); 
             int indice = r.Next(0,leer.Length);
             SdlHardware.Pause(100);
             devolver = new Bestia(leer[indice].Split(';')[0], leer[indice].Split(';')[1]);
+            devolver.CargarAtaques();
         }
         catch(Exception e)
         {

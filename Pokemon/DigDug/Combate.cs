@@ -4,10 +4,11 @@ using static Ataque;
 class Combate : Menu
 {
     Jugador prota, rival;
+    Sprite pokeball;
     Image fondo_opciones;
     Font font35;
     Bestia salvaje, seleccionado;
-    bool turno;
+    bool turno, capturando;
     Random r;
 
     public Combate(Jugador prota, Bestia salvaje)
@@ -17,12 +18,15 @@ class Combate : Menu
         font24 = new Font("data/Joystix.ttf", 25);
         font35 = new Font("data/Joystix.ttf", 35);
         continuar = true;
+        capturando = false;
         turno = true;
-        posicionFlecha = 520;
-        seleccion = 1;
+        posicionFlecha = 560;
+        seleccion = 0;
         this.prota = prota;
-        seleccionado = prota.GetEquipo()[0];
+        seleccionado = ObtenerPokemonDisponible();
         this.salvaje = salvaje;
+        pokeball = new Sprite("data/pokeball.png");
+        pokeball.MoveTo(700, 150);
         salvaje.MoveTo(600, 70);
         seleccionado.MoveTo(100, 350);
         fondo_opciones = new Image("data/dialogo_combate.png");
@@ -33,13 +37,84 @@ class Combate : Menu
         SdlHardware.ClearScreen();
         SdlHardware.DrawHiddenImage(bg, 0, 0);
         DibujarInterfazSalvaje();
-        DibujarInterfazSeleccionado(seleccionado);
-        SdlHardware.DrawHiddenImage(fondo_opciones, 0, 500);
+        DibujarInterfazSeleccionado();
+        SdlHardware.DrawHiddenImage(fondo_opciones, 0, 534);
+    }
+
+    private Bestia ObtenerPokemonDisponible()
+    {
+        bool puedeCambiar = false;
+        Bestia cambiar = null;
+        foreach (Bestia b in prota.GetEquipo())
+        {
+            if (b.GetVida() > 0 && !puedeCambiar)
+            {
+                cambiar = b;
+                puedeCambiar = true;
+            }
+        }
+
+        if (!puedeCambiar)
+        {
+            PerderCombate();
+        }
+        return cambiar;
+    }
+
+    private void PerderCombate()
+    {
+        do
+        {
+            DibujarInterfaz();
+
+            SdlHardware.WriteHiddenText("A " + prota.GetNombre() + " ya no le quedan",
+                        100, 560,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            SdlHardware.WriteHiddenText("más pokemons",
+                        100, 590,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            SdlHardware.ShowHiddenScreen();
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        foreach (Bestia b in prota.GetEquipo())
+        {
+            b.SetVida(b.GetMaxVida());
+        }
+        continuar = false;
+        SdlHardware.Pause(60);
+    }
+
+    private void GanarCombate()
+    {
+        do
+        {
+            DibujarInterfaz();
+
+            SdlHardware.WriteHiddenText(salvaje.GetNombre() + " se ha debilitado",
+                        100, 560,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            SdlHardware.WriteHiddenText("¡Has ganado!",
+                        100, 590,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            SdlHardware.ShowHiddenScreen();
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        continuar = false;
+        SdlHardware.Pause(60);
     }
 
     private void DibujarInterfazSalvaje()
     {
-        salvaje.DrawOnHiddenScreen();
+        if (capturando)
+        {
+            pokeball.DrawOnHiddenScreen();
+        }
+        else
+        {
+            salvaje.DrawOnHiddenScreen();
+        }
         SdlHardware.WriteHiddenText(salvaje.GetNombre(),
                         100, 100,
                         0, 0, 0,
@@ -54,7 +129,7 @@ class Combate : Menu
                         font24);
     }
 
-    private void DibujarInterfazSeleccionado(Bestia seleccionado)
+    private void DibujarInterfazSeleccionado()
     {
         seleccionado.DrawOnHiddenScreen();
 
@@ -77,19 +152,138 @@ class Combate : Menu
         do
         {
             DibujarInterfaz();
-            short altura = 520;
+            short altura = 560;
             foreach (ataque a in seleccionado.GetAtaques())
             {
                 SdlHardware.WriteHiddenText(a.nombre,
                             150, altura,
-                            0, 0, 0,
+                            0xC0, 0xC0, 0xC0,
                             font24);
                 altura += 50;
             }
+            altura = 560;
+            SdlHardware.WriteHiddenText("-->",
+               50, Convert.ToInt16(posicionFlecha),
+               0xC0, 0xC0, 0xC0,
+               font24);
             SdlHardware.ShowHiddenScreen();
-            altura = 500;
+
+            if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
+            {
+                if (seleccion == seleccionado.GetAtaques().Count)
+                {
+                    seleccion = 0;
+                    posicionFlecha = 560;
+                }
+                else
+                {
+                    seleccion++;
+                    posicionFlecha += 50;
+                }
+            }
+            if (SdlHardware.KeyPressed(SdlHardware.KEY_UP))
+            {
+                if (seleccion == 0)
+                {
+                    seleccion = seleccionado.GetAtaques().Count;
+                    posicionFlecha = Convert.ToInt16(560 + (seleccionado.GetAtaques().Count * 50));
+                }
+                else
+                {
+                    seleccion--;
+                    posicionFlecha -= 50;
+                }
+            }
+            SdlHardware.Pause(40);
+
         } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
         SdlHardware.Pause(100);
+
+        do
+        {
+            DibujarInterfaz();
+
+            SdlHardware.WriteHiddenText(seleccionado.GetNombre() + " usó: ",
+                        100, 560,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            SdlHardware.WriteHiddenText(seleccionado.GetAtaques()[seleccion].nombre,
+                        100, 590,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            SdlHardware.ShowHiddenScreen();
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        SdlHardware.Pause(100);
+        salvaje.SetVida(
+            (salvaje.GetVida() - seleccionado.GetAtaques()[seleccion].poder) >= 0 ?
+               (salvaje.GetVida() - seleccionado.GetAtaques()[seleccion].poder) : 0);
+    }
+
+    private void CapturarPokemon() //ACABAR
+    {
+        capturando = true;
+        bool haEscapado = false;
+        int indicePuntos = 1;
+        int tickBall = 1;
+        string cadenaPuntos = "";
+        do
+        {
+            DibujarInterfaz();
+            SdlHardware.WriteHiddenText("Capturando a " + salvaje.GetNombre(),
+                        100, 560,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            for (int i = 0; i < indicePuntos; i++)
+            {
+                cadenaPuntos += ".";
+            }
+            SdlHardware.WriteHiddenText(cadenaPuntos,
+                        100, 590,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+
+            SdlHardware.ShowHiddenScreen();
+            if (r.Next(1, 100) >= 50 ? true : false)
+            {
+                haEscapado = true;
+            }
+            else
+            {
+                tickBall++;
+            }
+            if (tickBall == 3)
+                capturando = false;
+
+            SdlHardware.Pause(1000);
+        } while (capturando && !haEscapado);
+
+        if(haEscapado)
+        {
+            do
+            {
+                DibujarInterfaz();
+                SdlHardware.WriteHiddenText("¡El pokemon ha escapado!",
+                            100, 560,
+                            0xC0, 0xC0, 0xC0,
+                            font35);
+                SdlHardware.ShowHiddenScreen();
+            } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+            capturando = false;
+        }
+        else
+        {
+            do
+            {
+                DibujarInterfaz();
+                SdlHardware.WriteHiddenText("Has capturado a " + salvaje.GetNombre(),
+                            100, 560,
+                            0xC0, 0xC0, 0xC0,
+                            font35);
+                SdlHardware.ShowHiddenScreen();
+            } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+            capturando = false;
+            continuar = false;
+        }
     }
 
     private void TuTurno()
@@ -98,20 +292,20 @@ class Combate : Menu
         {
             DibujarInterfaz();
             SdlHardware.WriteHiddenText("Atacar",
-                150, 520,
+                150, 560,
                 0xC0, 0xC0, 0xC0,
                 font24);
 
-            SdlHardware.WriteHiddenText("Cambiar Pokemon",
-                150, 570,
+            SdlHardware.WriteHiddenText("Capturar Pokemon",
+                150, 610,
                 0xC0, 0xC0, 0xC0,
                 font24);
             SdlHardware.WriteHiddenText("Mochila",
-                150, 620,
+                150, 660,
                 0xC0, 0xC0, 0xC0,
                 font24);
             SdlHardware.WriteHiddenText("Huir",
-                150, 670,
+                150, 710,
                 0xC0, 0xC0, 0xC0,
                 font24);
             SdlHardware.WriteHiddenText("-->",
@@ -126,7 +320,7 @@ class Combate : Menu
                 if (seleccion == 3)
                 {
                     seleccion = 0;
-                    posicionFlecha = 520;
+                    posicionFlecha = 560;
                 }
                 else
                 {
@@ -139,7 +333,7 @@ class Combate : Menu
                 if (seleccion == 0)
                 {
                     seleccion = 3;
-                    posicionFlecha = 670;
+                    posicionFlecha = 710;
                 }
                 else
                 {
@@ -147,16 +341,47 @@ class Combate : Menu
                     posicionFlecha -= 50;
                 }
             }
+            SdlHardware.Pause(40);
         } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
         SdlHardware.Pause(100);
 
         switch (seleccion)
         {
             case 0: TusAtaques(); break;
+            case 1: CapturarPokemon(); break;
+            case 2: Console.WriteLine("TO DO"); break;
             case 3:
-                continuar = false;
-                SdlHardware.Pause(60); break;
+                ComprobarPoderHuir(); break;
                 //TO DO
+        }
+    }
+
+    private void ComprobarPoderHuir()
+    {
+        if (r.Next(1, 100) >= 50 ? true : false)
+        {
+            do
+            {
+                DibujarInterfaz();
+                SdlHardware.WriteHiddenText("¡No has podido escapar!",
+                            100, 560,
+                            0xC0, 0xC0, 0xC0,
+                            font35);
+                SdlHardware.ShowHiddenScreen();
+            } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        }
+        else
+        {
+            do
+            {
+                DibujarInterfaz();
+                SdlHardware.WriteHiddenText("Escapaste sin problemas",
+                            100, 560,
+                            0xC0, 0xC0, 0xC0,
+                            font35);
+                SdlHardware.ShowHiddenScreen();
+            } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+            continuar = false;
         }
     }
 
@@ -166,18 +391,41 @@ class Combate : Menu
         do
         {
             DibujarInterfaz();
-            
+
             SdlHardware.WriteHiddenText(salvaje.GetNombre() + " enemigo usó: ",
-                        100, 540,
-                        0, 0, 0,
+                        100, 560,
+                        0xC0, 0xC0, 0xC0,
                         font35);
             SdlHardware.WriteHiddenText(salvaje.GetAtaques()[indice].nombre,
-                        100, 570,
-                        0, 0, 0,
+                        100, 590,
+                        0xC0, 0xC0, 0xC0,
                         font35);
             SdlHardware.ShowHiddenScreen();
         } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
         SdlHardware.Pause(100);
+        seleccionado.SetVida(
+            (seleccionado.GetVida() - salvaje.GetAtaques()[indice].poder) >= 0 ?
+               (seleccionado.GetVida() - salvaje.GetAtaques()[indice].poder) : 0);
+    }
+
+    private void ComprobarVidas()
+    {
+        if (seleccionado.GetVida() == 0)
+        {
+            do
+            {
+                DibujarInterfaz();
+                SdlHardware.WriteHiddenText(seleccionado.GetNombre() + " se ha debilitado",
+                            100, 560,
+                            0xC0, 0xC0, 0xC0,
+                            font35);
+                SdlHardware.ShowHiddenScreen();
+            } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+            SdlHardware.Pause(100);
+            seleccionado = ObtenerPokemonDisponible();
+        }
+        if (salvaje.GetVida() == 0)
+            GanarCombate();
     }
 
     public void Run()
@@ -194,6 +442,7 @@ class Combate : Menu
                 RivalAtaca();
                 SdlHardware.ShowHiddenScreen();
             }
+            ComprobarVidas();
             turno = turno ? false : true;
             SdlHardware.Pause(40);
         } while (continuar);

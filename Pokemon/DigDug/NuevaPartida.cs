@@ -165,6 +165,7 @@ class NuevaPartida : Menu
             string[] leer = File.ReadAllLines("data/pokemons/lista_pokemon.txt");
             int r = new Random().Next(1, leer.Length);
             nuevoJugador.GetEquipo().Add(new Bestia(leer[r].Split(';')[0], leer[r].Split(';')[1]));
+            nuevoJugador.GetEquipo()[0].CargarAtaques();
         }
         catch (Exception e)
         {

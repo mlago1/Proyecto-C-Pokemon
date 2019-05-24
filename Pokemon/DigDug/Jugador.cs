@@ -7,7 +7,7 @@ public class Jugador : Sprite
 {
     protected string nombre;
     protected string genero;
-    protected int dinero;
+    protected int dinero, pokemonsDiferentesCapturados;
     protected int tiempoJugado;
     public bool Hablando { get; set; } //SUBIR A SUPERCLASE
     protected List<Bestia> equipo;
@@ -17,6 +17,7 @@ public class Jugador : Sprite
         this.nombre = nombre;
         this.genero = genero;
         this.dinero = 0;
+        this.pokemonsDiferentesCapturados = 1;
         this.tiempoJugado = 0;
         if (genero == "Hombre")
             CargarHombre();
@@ -50,6 +51,16 @@ public class Jugador : Sprite
     public int GetDinero()
     {
         return dinero;
+    }
+
+    public int GetPokemonsDiferentesCapturados()
+    {
+        return pokemonsDiferentesCapturados;
+    }
+
+    public void SetPokemonsDiferentesCapturados(int pokemonsDiferentesCapturados)
+    {
+        this.pokemonsDiferentesCapturados = pokemonsDiferentesCapturados;
     }
 
     public int GetTiempoJugado() //PROVISIONAL
@@ -119,6 +130,7 @@ public class Jugador : Sprite
             escribir.WriteLine(nombre);
             escribir.WriteLine(genero);
             escribir.WriteLine(dinero);
+            escribir.WriteLine(pokemonsDiferentesCapturados);
             escribir.WriteLine(0);
             foreach (Arbol arbol in cargarMapa.Arboles)
             {
@@ -137,7 +149,7 @@ public class Jugador : Sprite
             }
             foreach (Bestia bestia in equipo)
             {
-                escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" + bestia.GetNivel() + ";" + bestia.GetVida() + ";");
+                escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" + bestia.GetNivel() + ";" + bestia.GetVida() + ";" + bestia.GetMaxVida() + ";");
                 for(int i = 0; i < bestia.GetAtaques().Count ; i++)
                 {
                     escribir.Write(bestia.GetAtaques()[i].nombre);
@@ -173,6 +185,7 @@ public class Jugador : Sprite
                 CargarMujer();
 
             dinero = Convert.ToInt32(leer.ReadLine());
+            pokemonsDiferentesCapturados = Convert.ToInt32(leer.ReadLine());
             tiempoJugado = Convert.ToInt32(leer.ReadLine());
             foreach (Arbol arbol in cargarMapa.Arboles)
             {
@@ -198,14 +211,13 @@ public class Jugador : Sprite
                     cortar[1],cortar[0]));
                 equipo[i].SetNivel(Convert.ToInt32(cortar[2]));
                 equipo[i].SetVida(Convert.ToInt32(cortar[3]));
-                string[] auxCortar = cortar[4].Split('_');
-                int j = 0;
+                equipo[i].SetMaxVida(Convert.ToInt32(cortar[4]));
+                string[] auxCortar = cortar[5].Split('_');
                 foreach(string s in auxCortar)
                 {
                     string[] auxAuxCortar = s.Split(':');
-                    equipo[i].GetAtaques()[j] = new ataque(auxAuxCortar[0],
-                        auxAuxCortar[1], Convert.ToInt32(auxAuxCortar[2]));
-                    j++;
+                    equipo[i].GetAtaques().Add(new ataque(auxAuxCortar[0],
+                        auxAuxCortar[1], Convert.ToInt32(auxAuxCortar[2])));
                 }
                 linea = leer.ReadLine();
                 i++;

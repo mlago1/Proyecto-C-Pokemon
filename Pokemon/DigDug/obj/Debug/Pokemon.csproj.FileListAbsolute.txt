@@ -29,3 +29,11 @@ I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.csproj.Co
 I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CopyComplete
 I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.exe
 I:\1 DAM\Programación\PROYECTO FINAL\Pokemon\DigDug\obj\Debug\Pokemon.pdb
+C:\Users\Manuel\Desktop\ProyectoFinalC-\Pokemon\DigDug\bin\Debug\Pokemon.exe.config
+C:\Users\Manuel\Desktop\ProyectoFinalC-\Pokemon\DigDug\bin\Debug\Pokemon.exe
+C:\Users\Manuel\Desktop\ProyectoFinalC-\Pokemon\DigDug\bin\Debug\Pokemon.pdb
+C:\Users\Manuel\Desktop\ProyectoFinalC-\Pokemon\DigDug\obj\Debug\Pokemon.csprojAssemblyReference.cache
+C:\Users\Manuel\Desktop\ProyectoFinalC-\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CoreCompileInputs.cache
+C:\Users\Manuel\Desktop\ProyectoFinalC-\Pokemon\DigDug\obj\Debug\Pokemon.csproj.CopyComplete
+C:\Users\Manuel\Desktop\ProyectoFinalC-\Pokemon\DigDug\obj\Debug\Pokemon.exe
+C:\Users\Manuel\Desktop\ProyectoFinalC-\Pokemon\DigDug\obj\Debug\Pokemon.pdb

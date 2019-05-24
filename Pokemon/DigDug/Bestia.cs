@@ -5,7 +5,7 @@ using System.IO;
 public class Bestia : Sprite
 {
     protected string nombre;
-    protected int nivel,vida;
+    protected int nivel,vida,maxVida;
     List<Ataque.ataque> ataques;
     Random r = new Random();
     public Bestia(string nombre, string nombreImagen)
@@ -14,10 +14,10 @@ public class Bestia : Sprite
         this.nombre = nombre;
         nivel = new Random().Next(1,100);
         vida = nivel * 2;
+        maxVida = vida;
         width = 256;
         height = 282;
         ataques = new List<Ataque.ataque>();
-        CargarAtaques();
     }
 
     public string GetNombre()
@@ -55,7 +55,17 @@ public class Bestia : Sprite
         this.vida = vida;
     }
 
-    private void CargarAtaques()
+    public int GetMaxVida()
+    {
+        return maxVida;
+    }
+
+    public void SetMaxVida(int maxVida)
+    {
+        this.maxVida = maxVida;
+    }
+
+    public void CargarAtaques()
     {
         try
         {
@@ -64,7 +74,16 @@ public class Bestia : Sprite
             {
                 int indiceRandom = r.Next(0, leer.Length);
                 string[] cortarLinea = leer[indiceRandom].Split(';');
-                this.ataques.Add(new Ataque.ataque(cortarLinea[0],cortarLinea[1],Convert.ToInt32(cortarLinea[2])));
+                bool control = true;
+                foreach (Ataque.ataque a in this.ataques)
+                {
+                    if(a.nombre == cortarLinea[0])
+                    {
+                        control = false;
+                    }
+                }
+                if(control)
+                    this.ataques.Add(new Ataque.ataque(cortarLinea[0],cortarLinea[1],Convert.ToInt32(cortarLinea[2])));
             }
         }catch(Exception e)
         {

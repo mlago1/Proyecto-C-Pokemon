@@ -84,7 +84,7 @@ class MenuJugador : Menu
             switch(seleccion)
             {
                 case 1:;break;
-                case 2:; break;
+                case 2: EquipoJugador ej = new EquipoJugador(prota); ej.Run() ; break;
                 case 3:; break;
                 case 4: InformacionJugador ij = new InformacionJugador(prota); ij.Run() ; break;
                 case 5: prota.guardarJugador("partidas/" + prota.GetNombre() + ".txt",ref mapa);

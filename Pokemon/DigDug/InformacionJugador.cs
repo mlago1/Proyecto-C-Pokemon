@@ -41,7 +41,7 @@
             100, 200,
             0xC0, 0xC0, 0xC0,
             font24);
-        SdlHardware.WriteHiddenText("atrapados: 0", //PROVISIONAL
+        SdlHardware.WriteHiddenText("atrapados: " + prota.GetPokemonsDiferentesCapturados(),
             100, 250,
             0xC0, 0xC0, 0xC0,
             font24);
