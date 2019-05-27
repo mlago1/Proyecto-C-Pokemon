@@ -1,0 +1,15 @@
+g
+Hombre
+0
+2
+0
+637
+860
+125
+410
+125
+960
+-125
+-405
+data/pokemons/mew.png;mew;92;34;184;Salpicadura:Agua:0_Lanzallamas:Fuego:100_Rayo Hielo:Hielo:70
+data/pokemons/pikachu.png;pikachu;99;98;198;Salpicadura:Agua:0_Lanzallamas:Fuego:100_Pistola Agua:Agua:50

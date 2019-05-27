@@ -3,9 +3,9 @@
 class MenuJugador : Menu
 {
     Jugador prota;
-    Mapa mapa;
+    Juego juego;
 
-    public MenuJugador(Jugador prota, Mapa mapa)
+    public MenuJugador(Jugador prota, Sprite fondo, Sprite dialogo, Juego juego)
     {
         bg = new Image("data/menu_partidas.png");
         font24 = new Font("data/Joystix.ttf", 30);
@@ -14,7 +14,9 @@ class MenuJugador : Menu
         maxOpciones = 7;
         continuar = true;
         this.prota = prota;
-        this.mapa = mapa;
+        this.fondo = fondo;
+        this.dialogo = dialogo;
+        this.juego = juego;
     }
 
     private void GuardadoCompletado()
@@ -83,11 +85,11 @@ class MenuJugador : Menu
             
             switch(seleccion)
             {
-                case 1:;break;
+                case 1:;Pokedex p = new Pokedex(prota); p.Run(); break;
                 case 2: EquipoJugador ej = new EquipoJugador(prota); ej.Run() ; break;
                 case 3:; break;
                 case 4: InformacionJugador ij = new InformacionJugador(prota); ij.Run() ; break;
-                case 5: prota.guardarJugador("partidas/" + prota.GetNombre() + ".txt",ref mapa);
+                case 5: prota.guardarJugador("partidas/" + prota.GetNombre() + ".txt", ref fondo, ref dialogo, juego.nuevoScrollX, juego.nuevoScrollY);
                     GuardadoCompletado(); break;
                 case 6: Instrucciones i = new Instrucciones() ; i.Run() ; break;
                 case 7: continuar = false; ; break;
@@ -159,5 +161,6 @@ class MenuJugador : Menu
             DibujarInterfaz();
             DetectarTeclas();
         } while (continuar);
+        SdlHardware.ScrollTo(juego.nuevoScrollX,juego.nuevoScrollY);
     }
 }

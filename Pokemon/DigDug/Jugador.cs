@@ -7,15 +7,20 @@ public class Jugador : Sprite
 {
     protected string nombre;
     protected string genero;
-    protected int dinero, pokemonsDiferentesCapturados;
+    protected int dinero, pokemonsDiferentesCapturados, velocidad;
     protected int tiempoJugado;
-    public bool Hablando { get; set; } //SUBIR A SUPERCLASE
-    protected List<Bestia> equipo;
+    public bool Hablando { get; set; } 
+    protected List<Bestia> equipo, caja;
 
     public Jugador(string nombre, string genero)
     {
+        this.velocidad = 5;
+        this.width = 34;
+        this.height = 48;
         this.nombre = nombre;
         this.genero = genero;
+        this.x = 512;
+        this.y = 450;
         this.dinero = 0;
         this.pokemonsDiferentesCapturados = 1;
         this.tiempoJugado = 0;
@@ -25,10 +30,12 @@ public class Jugador : Sprite
             CargarMujer();
         Hablando = false;
         equipo = new List<Bestia>();
+        caja = new List<Bestia>();
     }
 
     public Jugador()
     {
+        this.velocidad = 10;
         Hablando = false;
         equipo = new List<Bestia>();
     }
@@ -43,6 +50,11 @@ public class Jugador : Sprite
         return equipo;
     }
 
+    public List<Bestia> GetCaja()
+    {
+        return caja;
+    }
+
     public string GetGenero()
     {
         return genero;
@@ -51,6 +63,11 @@ public class Jugador : Sprite
     public int GetDinero()
     {
         return dinero;
+    }
+
+    public int GetVelocidad()
+    {
+        return velocidad;
     }
 
     public int GetPokemonsDiferentesCapturados()
@@ -120,7 +137,7 @@ public class Jugador : Sprite
         currentDirection = LEFT;
     }
 
-    public void guardarJugador(string partida, ref Mapa cargarMapa)
+    public void guardarJugador(string partida, ref Sprite fondo, ref Sprite dialogo, int scrollX, int scrollY)
     {
         try
         {
@@ -132,21 +149,15 @@ public class Jugador : Sprite
             escribir.WriteLine(dinero);
             escribir.WriteLine(pokemonsDiferentesCapturados);
             escribir.WriteLine(0);
-            foreach (Arbol arbol in cargarMapa.Arboles)
-            {
-                escribir.WriteLine(arbol.x);
-                escribir.WriteLine(arbol.y);
-            }
-            foreach (Edificio edificio in cargarMapa.Edificios)
-            {
-                escribir.WriteLine(edificio.x);
-                escribir.WriteLine(edificio.y);
-            }
-            foreach (Hierba hierba in cargarMapa.Hierbas)
-            {
-                escribir.WriteLine(hierba.x);
-                escribir.WriteLine(hierba.y);
-            }
+            escribir.WriteLine(this.x);
+            escribir.WriteLine(this.y);
+            escribir.WriteLine(fondo.x);
+            escribir.WriteLine(fondo.y);
+            escribir.WriteLine(dialogo.x);
+            escribir.WriteLine(dialogo.y);
+            escribir.WriteLine(scrollX);
+            escribir.WriteLine(scrollY);
+
             foreach (Bestia bestia in equipo)
             {
                 escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" + bestia.GetNivel() + ";" + bestia.GetVida() + ";" + bestia.GetMaxVida() + ";");
@@ -163,6 +174,23 @@ public class Jugador : Sprite
                 escribir.WriteLine();
             }
             escribir.Close();
+            escribir = new StreamWriter(partida+"_caja.txt");
+            foreach (Bestia bestia in caja)
+            {
+                escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" + bestia.GetNivel() + ";" + bestia.GetVida() + ";" + bestia.GetMaxVida() + ";");
+                for (int i = 0; i < bestia.GetAtaques().Count; i++)
+                {
+                    escribir.Write(bestia.GetAtaques()[i].nombre);
+                    escribir.Write(":" + bestia.GetAtaques()[i].tipo);
+                    escribir.Write(":" + bestia.GetAtaques()[i].poder);
+                    if (i < bestia.GetAtaques().Count - 1)
+                    {
+                        escribir.Write("_");
+                    }
+                }
+                escribir.WriteLine();
+            }
+            escribir.Close();
         }
         catch(Exception e)
         {
@@ -170,7 +198,7 @@ public class Jugador : Sprite
         }
     }
 
-    public void cargarJugador(string partida, ref Mapa cargarMapa)
+    public void cargarJugador(string partida, ref Sprite fondo, ref Sprite dialogo)
     {
         try
         {
@@ -187,36 +215,55 @@ public class Jugador : Sprite
             dinero = Convert.ToInt32(leer.ReadLine());
             pokemonsDiferentesCapturados = Convert.ToInt32(leer.ReadLine());
             tiempoJugado = Convert.ToInt32(leer.ReadLine());
-            foreach (Arbol arbol in cargarMapa.Arboles)
-            {
-                arbol.x = Convert.ToInt32(leer.ReadLine());
-                arbol.y = Convert.ToInt32(leer.ReadLine());
-            }
-            foreach (Edificio edificio in cargarMapa.Edificios)
-            {
-                edificio.x = Convert.ToInt32(leer.ReadLine());
-                edificio.y = Convert.ToInt32(leer.ReadLine());
-            }
-            foreach (Hierba hierba in cargarMapa.Hierbas)
-            {
-                hierba.x = Convert.ToInt32(leer.ReadLine());
-                hierba.y = Convert.ToInt32(leer.ReadLine());
-            }
+            this.x = Convert.ToInt32(leer.ReadLine());
+            this.y = Convert.ToInt32(leer.ReadLine());
+            fondo.x = Convert.ToInt32(leer.ReadLine());
+            fondo.y = Convert.ToInt32(leer.ReadLine());
+            dialogo.x = Convert.ToInt32(leer.ReadLine());
+            dialogo.y = Convert.ToInt32(leer.ReadLine());
+            SdlHardware.startX = Convert.ToInt16(leer.ReadLine());
+            SdlHardware.startY = Convert.ToInt16(leer.ReadLine());
+
             string linea = leer.ReadLine();
             int i = 0;
-            while(linea != null)
+            while (linea != null)
             {
                 string[] cortar = linea.Split(';');
                 equipo.Add(new Bestia(
-                    cortar[1],cortar[0]));
+                    cortar[1], cortar[0]));
                 equipo[i].SetNivel(Convert.ToInt32(cortar[2]));
                 equipo[i].SetVida(Convert.ToInt32(cortar[3]));
                 equipo[i].SetMaxVida(Convert.ToInt32(cortar[4]));
                 string[] auxCortar = cortar[5].Split('_');
-                foreach(string s in auxCortar)
+                foreach (string s in auxCortar)
                 {
                     string[] auxAuxCortar = s.Split(':');
                     equipo[i].GetAtaques().Add(new ataque(auxAuxCortar[0],
+                        auxAuxCortar[1], Convert.ToInt32(auxAuxCortar[2])));
+                }
+                linea = leer.ReadLine();
+                i++;
+            }
+
+            leer.Close();
+
+            leer = new StreamReader(partida+"_caja.txt");
+
+            linea = leer.ReadLine();
+            i = 0;
+            while (linea != null)
+            {
+                string[] cortar = linea.Split(';');
+                caja.Add(new Bestia(
+                    cortar[1], cortar[0]));
+                caja[i].SetNivel(Convert.ToInt32(cortar[2]));
+                caja[i].SetVida(Convert.ToInt32(cortar[3]));
+                caja[i].SetMaxVida(Convert.ToInt32(cortar[4]));
+                string[] auxCortar = cortar[5].Split('_');
+                foreach (string s in auxCortar)
+                {
+                    string[] auxAuxCortar = s.Split(':');
+                    caja[i].GetAtaques().Add(new ataque(auxAuxCortar[0],
                         auxAuxCortar[1], Convert.ToInt32(auxAuxCortar[2])));
                 }
                 linea = leer.ReadLine();
@@ -229,26 +276,5 @@ public class Jugador : Sprite
         {
 
         }
-    }
-
-    public bool PuedeMoverse (Jugador prota, List<Arbol> arboles, List<Edificio> edificios, List<Npc> npcs)
-    {
-        bool puede = true;
-        foreach (Arbol arbol in arboles)
-        {
-            if (prota.CollisionsWith(arbol))
-                puede = false;
-        }
-        foreach (Edificio edificio in edificios)
-        {
-            if (prota.CollisionsWith(edificio))
-                puede = false;
-        }
-        foreach (Npc npc in npcs)
-        {
-            if (prota.CollisionsWith(npc))
-                puede = false;
-        }
-        return puede;
     }
 }

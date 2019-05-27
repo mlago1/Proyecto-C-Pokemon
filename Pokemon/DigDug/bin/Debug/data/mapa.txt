@@ -17,8 +17,8 @@ AAAAA                              AAAAA
 AAAAA                              AAAAA
 AAAAA                              AAAAA
 AAAAA                              AAAAA
-AAAAA                              AAAAA
-AAAAA                              AAAAA
+AAAAA                       N      AAAAA
+AAAAA     N                        AAAAA
 AAAAA                              AAAAA
 AAAAA                              AAAAA
 AAAAA                              AAAAA

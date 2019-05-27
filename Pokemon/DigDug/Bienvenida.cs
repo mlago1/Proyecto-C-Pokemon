@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-class Bienvenida
+﻿class Bienvenida : Menu
 {
-    Image bg;
-    Font font24;
-
     public Bienvenida()
     {
         bg = new Image("data/pantalla_principal.jpg");

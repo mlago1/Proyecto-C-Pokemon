@@ -1,0 +1,2 @@
+data/npcs/protaMale/maleRightBase.png;data/npcs/protaMale/maleLeftBase.png;data/npcs/protaMale/maleUpBase.png;data/npcs/protaMale/maleDownBase.png
+data/npcs/protaFemale/femaleRightBase.png;data/npcs/protaFemale/femaleLeftBase.png;data/npcs/protaFemale/femaleUpBase.png;data/npcs/protaFemale/femaleDownBase.png

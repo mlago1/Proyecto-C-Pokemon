@@ -17,7 +17,7 @@ class SdlHardware
     static IntPtr hiddenScreen;
     static short width, height;
 
-    static short startX, startY; // For Scroll
+    public static short startX, startY; // For Scroll
 
     static bool isThereJoystick;
     static IntPtr joystick;

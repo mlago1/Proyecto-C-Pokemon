@@ -7,12 +7,47 @@ public class Mapa
      public List<Arbol> Arboles { get; set; }
      public List<Edificio> Edificios { get; set; }
      public List<Hierba> Hierbas { get; set; }
+     public List<Npc> Npcs { get; set; }
+     Random r;
 
     public Mapa()
     {
         Arboles = new List<Arbol>();
         Edificios = new List<Edificio>();
         Hierbas = new List<Hierba>();
+        Npcs = new List<Npc>();
+        r = new Random();
+    }
+
+    private Npc CargarNpc()
+    {
+        Npc devolver = null;
+        int numFrasesAnyadir = 3;
+        try
+        {
+            string[] leer = File.ReadAllLines("data/npcs/lista_npc.txt");
+            string[] leer2 = File.ReadAllLines("data/npcs/lista_frases.txt");
+
+            int indice = r.Next(0, leer.Length);
+            devolver = new Npc(new string[4][] {
+                new string[] {leer[indice].Split(';')[0] },
+                new string[] {leer[indice].Split(';')[1] },
+                new string[] {leer[indice].Split(';')[2] },
+                new string[] {leer[indice].Split(';')[3] } });
+
+            for(int i = 0; i < numFrasesAnyadir; i++)
+            {
+                indice = r.Next(0, leer2.Length);
+                if (!devolver.Dialogo.Contains(leer2[indice]))
+                    devolver.Dialogo.Add(leer2[indice]);
+            }
+            
+        }
+        catch (Exception e)
+        {
+
+        }
+        return devolver;
     }
 
     public void CargarMapa(string nombre)
@@ -57,6 +92,12 @@ public class Mapa
                         Hierba h = new Hierba("data/hierba_alta.png");
                         h.MoveTo(actualX, actualY);
                         Hierbas.Add(h);
+                        break;
+
+                    case 'N':
+                        Npc n = CargarNpc();
+                        n.MoveTo(actualX, actualY);
+                        Npcs.Add(n);
                         break;
                 }
 

@@ -87,7 +87,7 @@ class CargarPartida : Menu
                     if (seleccion == 1)
                     {
                         seleccion = maxOpciones;
-                        posicionFlecha = Convert.ToInt16(50 * maxOpciones);
+                        posicionFlecha = Convert.ToInt16(200 + (100 * (maxOpciones - 1)));
                     }
                     else
                     {
@@ -115,9 +115,8 @@ class CargarPartida : Menu
     {
             DibujarInterfaz();
             Jugador nuevoJugador = new Jugador();
-            nuevoJugador.cargarJugador("partidas/"+ nombrePartida + ".txt",ref cargarMapa);
-            //CargarNPCS -- Futuro
-            Juego j = new Juego(nuevoJugador,cargarMapa);
+            nuevoJugador.cargarJugador("partidas/"+ nombrePartida + ".txt", ref fondo, ref dialogo);
+            Juego j = new Juego(nuevoJugador, fondo, dialogo);
             j.Run();
         
     }

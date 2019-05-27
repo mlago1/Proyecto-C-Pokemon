@@ -73,7 +73,7 @@ class EquipoJugador : Menu
             if (seleccion == 0)
             {
                 seleccion = prota.GetEquipo().Count - 1;
-                posicionFlecha = Convert.ToInt16(150 + (prota.GetEquipo().Count * 50));
+                posicionFlecha = Convert.ToInt16(150 + ((prota.GetEquipo().Count - 1) * 50));
             }
             else
             {

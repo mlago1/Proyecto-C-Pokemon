@@ -4,14 +4,14 @@ using static Ataque;
 class Combate : Menu
 {
     Jugador prota, rival;
-    Sprite pokeball;
     Image fondo_opciones;
+    Juego juego;
     Font font35;
     Bestia salvaje, seleccionado;
     bool turno, capturando;
     Random r;
 
-    public Combate(Jugador prota, Bestia salvaje)
+    public Combate(ref Jugador prota, Bestia salvaje, Juego juego)
     {
         r = new Random();
         bg = new Image("data/fondo_combate.png");
@@ -25,10 +25,8 @@ class Combate : Menu
         this.prota = prota;
         seleccionado = ObtenerPokemonDisponible();
         this.salvaje = salvaje;
-        pokeball = new Sprite("data/pokeball.png");
-        pokeball.MoveTo(700, 150);
+        this.juego = juego;
         salvaje.MoveTo(600, 70);
-        seleccionado.MoveTo(100, 350);
         fondo_opciones = new Image("data/dialogo_combate.png");
     }
 
@@ -50,6 +48,7 @@ class Combate : Menu
             if (b.GetVida() > 0 && !puedeCambiar)
             {
                 cambiar = b;
+                cambiar.MoveTo(100, 350);
                 puedeCambiar = true;
             }
         }
@@ -91,12 +90,12 @@ class Combate : Menu
         {
             DibujarInterfaz();
 
-            SdlHardware.WriteHiddenText(salvaje.GetNombre() + " se ha debilitado",
-                        100, 560,
+            SdlHardware.WriteHiddenText(salvaje.GetNombre() + " enemigo se ha debilitado",
+                        80, 560,
                         0xC0, 0xC0, 0xC0,
                         font35);
             SdlHardware.WriteHiddenText("¡Has ganado!",
-                        100, 590,
+                        80, 590,
                         0xC0, 0xC0, 0xC0,
                         font35);
             SdlHardware.ShowHiddenScreen();
@@ -109,7 +108,7 @@ class Combate : Menu
     {
         if (capturando)
         {
-            pokeball.DrawOnHiddenScreen();
+            SdlHardware.DrawHiddenImage(new Image("data/pokeball.png"), 700, 250);
         }
         else
         {
@@ -170,7 +169,7 @@ class Combate : Menu
 
             if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
             {
-                if (seleccion == seleccionado.GetAtaques().Count)
+                if (seleccion == seleccionado.GetAtaques().Count - 1)
                 {
                     seleccion = 0;
                     posicionFlecha = 560;
@@ -185,8 +184,8 @@ class Combate : Menu
             {
                 if (seleccion == 0)
                 {
-                    seleccion = seleccionado.GetAtaques().Count;
-                    posicionFlecha = Convert.ToInt16(560 + (seleccionado.GetAtaques().Count * 50));
+                    seleccion = seleccionado.GetAtaques().Count - 1;
+                    posicionFlecha = Convert.ToInt16(560 + ((seleccionado.GetAtaques().Count - 1) * 50));
                 }
                 else
                 {
@@ -219,11 +218,12 @@ class Combate : Menu
                (salvaje.GetVida() - seleccionado.GetAtaques()[seleccion].poder) : 0);
     }
 
-    private void CapturarPokemon() //ACABAR
+    private void CapturarPokemon() 
     {
+        SdlHardware.Pause(100);
+
         capturando = true;
         bool haEscapado = false;
-        int indicePuntos = 1;
         int tickBall = 1;
         string cadenaPuntos = "";
         do
@@ -233,9 +233,9 @@ class Combate : Menu
                         100, 560,
                         0xC0, 0xC0, 0xC0,
                         font35);
-            for (int i = 0; i < indicePuntos; i++)
+            for (int i = 0; i < tickBall; i++)
             {
-                cadenaPuntos += ".";
+                cadenaPuntos += ". ";
             }
             SdlHardware.WriteHiddenText(cadenaPuntos,
                         100, 590,
@@ -243,7 +243,8 @@ class Combate : Menu
                         font35);
 
             SdlHardware.ShowHiddenScreen();
-            if (r.Next(1, 100) >= 50 ? true : false)
+
+            if (r.Next(1, 100) >= 70 ? true : false)
             {
                 haEscapado = true;
             }
@@ -253,8 +254,6 @@ class Combate : Menu
             }
             if (tickBall == 3)
                 capturando = false;
-
-            SdlHardware.Pause(1000);
         } while (capturando && !haEscapado);
 
         if(haEscapado)
@@ -275,14 +274,39 @@ class Combate : Menu
             do
             {
                 DibujarInterfaz();
-                SdlHardware.WriteHiddenText("Has capturado a " + salvaje.GetNombre(),
+                SdlHardware.WriteHiddenText("¡Has capturado a " + salvaje.GetNombre() + "!",
                             100, 560,
                             0xC0, 0xC0, 0xC0,
                             font35);
                 SdlHardware.ShowHiddenScreen();
             } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+            SdlHardware.Pause(100);
+            if (prota.GetEquipo().Count == 6)
+            {
+                do
+                {
+                    DibujarInterfaz();
+                    SdlHardware.WriteHiddenText(salvaje.GetNombre() + " fue enviado ",
+                                100, 560,
+                                0xC0, 0xC0, 0xC0,
+                                font35);
+                    SdlHardware.WriteHiddenText("al pc",
+                                100, 610,
+                                0xC0, 0xC0, 0xC0,
+                                font35);
+                    SdlHardware.ShowHiddenScreen();
+                } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+
+                prota.GetCaja().Add(salvaje);
+            }
+            else
+            {
+                prota.GetEquipo().Add(salvaje);
+            }
+
             capturando = false;
             continuar = false;
+            prota.SetPokemonsDiferentesCapturados(prota.GetPokemonsDiferentesCapturados()+1);
         }
     }
 
@@ -350,9 +374,7 @@ class Combate : Menu
             case 0: TusAtaques(); break;
             case 1: CapturarPokemon(); break;
             case 2: Console.WriteLine("TO DO"); break;
-            case 3:
-                ComprobarPoderHuir(); break;
-                //TO DO
+            case 3: ComprobarPoderHuir(); break;
         }
     }
 
@@ -433,18 +455,14 @@ class Combate : Menu
         do
         {
             if (turno)
-            {
                 TuTurno();
-                SdlHardware.ShowHiddenScreen();
-            }
             else
-            {
                 RivalAtaca();
-                SdlHardware.ShowHiddenScreen();
-            }
+
             ComprobarVidas();
             turno = turno ? false : true;
             SdlHardware.Pause(40);
         } while (continuar);
+        SdlHardware.ScrollTo(juego.nuevoScrollX, juego.nuevoScrollY);
     }
 }

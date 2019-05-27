@@ -1,44 +1,29 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 
 class Juego
 {
     protected Jugador protagonista;
-    protected List<Npc> npcs;
     protected bool bucle;
-    protected Image fondo;
+    protected Sprite fondo, dialogo;
     protected Mapa mapa;
     Font font18;
     protected bool dibujarDialogo;
     Random r;
+    int viejoX, viejoY, viejoFondoX, viejoFondoY, viejoDialogoX, viejoDialogoY;
+    public short viejoScrollX, viejoScrollY, nuevoScrollX, nuevoScrollY;
 
-    public Juego(Jugador protagonista, Mapa mapa)
+    public Juego(Jugador protagonista, Sprite fondo, Sprite dialogo)
     {
         r = new Random();
         bucle = true;
         this.protagonista = protagonista;
-        this.protagonista.MoveTo(512, 450);
         font18 = new Font("data/Joystix.ttf", 18);
-        fondo = new Image("data/fondo_juego.jpg");
-        this.mapa = mapa;
-        npcs = new List<Npc>();
-        CargarNpc();
+        this.fondo = fondo;
+        this.dialogo = dialogo;
+        mapa = new Mapa();
+        mapa.CargarMapa("data/mapa.txt");
         dibujarDialogo = false;
-    }
-
-    private void CargarNpc()
-    {
-        Random r = new Random(); //PROVISIONAL
-        npcs.Add(new Npc("data/prota_hombre/maleDownBase.png"));
-        npcs.Add(new Npc("data/prota_mujer/femaleDownBase.png"));
-        foreach (Npc npc in npcs)
-        {
-            npc.MoveTo(r.Next(400, 600), r.Next(400, 600));
-            npc.Dialogo.Add("Hola");
-            npc.Dialogo.Add("Adios");
-            npc.Dialogo.Add("Que tal");
-        }
     }
 
     private Bestia CargarPokemonSalvaje()
@@ -62,8 +47,12 @@ class Juego
     private void DibujarJuego()
     {
         SdlHardware.ClearScreen();
-        SdlHardware.DrawHiddenImage(fondo, 0, 0);
-
+        fondo.DrawOnHiddenScreen();
+        foreach (Hierba hierba in mapa.Hierbas)
+        {
+            hierba.DrawOnHiddenScreen();
+        }
+        protagonista.DrawOnHiddenScreen();
         foreach (Arbol arbol in mapa.Arboles)
         {
             arbol.DrawOnHiddenScreen();
@@ -72,21 +61,17 @@ class Juego
         {
             edificio.DrawOnHiddenScreen();
         }
-        foreach (Hierba hierba in mapa.Hierbas)
-        {
-            hierba.DrawOnHiddenScreen();
-        }
-        protagonista.DrawOnHiddenScreen();
-        foreach (Npc npc in npcs)
+        
+
+        foreach (Npc npc in mapa.Npcs)
         {
             npc.DrawOnHiddenScreen();
             if (npc.Hablando)
             {
-                SdlHardware.DrawHiddenImage(
-                    new Image("data/fondo_dialogo.png"), 0, 500);
+                dialogo.DrawOnHiddenScreen();
                 SdlHardware.WriteHiddenText(
                     npc.Dialogo[npc.IndiceDialogo],
-                    50, 550,
+                    Convert.ToInt16(dialogo.x + 50), Convert.ToInt16(dialogo.y + 50),
                     0, 0, 0,
                     font18);
             }
@@ -95,23 +80,39 @@ class Juego
         SdlHardware.ShowHiddenScreen();
     }
 
-    private void MoverMundo(int X, int Y)
+    private void Moverse(int X, int Y, byte direccion)
     {
-        foreach (Arbol arbol in mapa.Arboles)
+        protagonista.MoveTo(protagonista.x + X, protagonista.y + Y);
+        fondo.MoveTo(fondo.x + X, fondo.y + Y);
+        dialogo.MoveTo(dialogo.x + X, dialogo.y + Y);
+        SdlHardware.ScrollTo(Convert.ToInt16(SdlHardware.startX - X), Convert.ToInt16(SdlHardware.startY - Y));
+        protagonista.ChangeDirection(direccion);
+        protagonista.NextFrame();
+    }
+
+    private void InvertirCoordenadas(bool invertir)
+    {
+        if(invertir)
         {
-            arbol.MoveTo(arbol.GetX() + X, arbol.GetY() + Y);
+            protagonista.x = viejoX;
+            protagonista.y = viejoY;
+            fondo.x = viejoFondoX;
+            fondo.y = viejoFondoY;
+            dialogo.x = viejoDialogoX;
+            dialogo.y = viejoDialogoY;
+            SdlHardware.startX = viejoScrollX;
+            SdlHardware.startY = viejoScrollY;
         }
-        foreach (Edificio edificio in mapa.Edificios)
+        else
         {
-            edificio.MoveTo(edificio.GetX() + X, edificio.GetY() + Y);
-        }
-        foreach (Hierba hierba in mapa.Hierbas)
-        {
-            hierba.MoveTo(hierba.GetX() + X, hierba.GetY() + Y);
-        }
-        foreach (Npc npc in npcs)
-        {
-            npc.MoveTo(npc.GetX() + X, npc.GetY() + Y);
+            viejoX = protagonista.x;
+            viejoY = protagonista.y;
+            viejoFondoX = fondo.x;
+            viejoFondoY = fondo.y;
+            viejoDialogoX = dialogo.x;
+            viejoDialogoY = dialogo.y;
+            viejoScrollX = SdlHardware.startX;
+            viejoScrollY = SdlHardware.startY;
         }
     }
 
@@ -124,7 +125,8 @@ class Juego
                 if (r.Next(1, 100) <= 5 ? true : false)
                 {
                     Combate combate = new Combate(
-                        protagonista,CargarPokemonSalvaje());
+                        ref protagonista,CargarPokemonSalvaje(), this);
+                    SdlHardware.ResetScroll();
                     combate.Run();
                 }
             }
@@ -135,13 +137,12 @@ class Juego
     {
         if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
         {
-            foreach (Npc npc in npcs)
+            foreach (Npc npc in mapa.Npcs)
             {
                 if (protagonista.CollisionsWith(npc))
                 {
                     switch (protagonista.currentDirection)
                     {
-                        //PROVISIONAL
                         case Sprite.DOWN:
                             npc.ChangeDirection(Sprite.UP);
                             break;
@@ -163,7 +164,7 @@ class Juego
             }
             SdlHardware.Pause(100);
         }
-        foreach (Npc npc in npcs)
+        foreach (Npc npc in mapa.Npcs)
         {
             if (npc.Hablando)
             {
@@ -189,62 +190,62 @@ class Juego
     {
         if (!protagonista.Hablando)
         {
+            InvertirCoordenadas(false);
+
             if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
             {
-                if (protagonista.PuedeMoverse(
-                        protagonista, mapa.Arboles, mapa.Edificios, npcs))
-                    MoverMundo(0, -10);
-                else
-                    MoverMundo(0, 20);
+                Moverse(0,protagonista.GetVelocidad(), Sprite.DOWN);
                 BuscarCombateSalvaje();
-                protagonista.ChangeDirection(Sprite.DOWN);
-                protagonista.NextFrame();
             }
             else if (SdlHardware.KeyPressed(SdlHardware.KEY_UP))
             {
-                if (protagonista.PuedeMoverse(
-                        protagonista, mapa.Arboles, mapa.Edificios, npcs))
-                    MoverMundo(0, 10);
-                else
-                    MoverMundo(0, -20);
+                Moverse(0, -protagonista.GetVelocidad(), Sprite.UP);
                 BuscarCombateSalvaje();
-                protagonista.ChangeDirection(Sprite.UP);
-                protagonista.NextFrame();
             }
             else if (SdlHardware.KeyPressed(SdlHardware.KEY_LEFT))
             {
-                if (protagonista.PuedeMoverse(
-                        protagonista, mapa.Arboles, mapa.Edificios, npcs))
-                    MoverMundo(10, 0);
-                else
-                    MoverMundo(-20, 0);
+                Moverse(-protagonista.GetVelocidad(), 0, Sprite.LEFT);
                 BuscarCombateSalvaje();
-                protagonista.ChangeDirection(Sprite.LEFT);
-                protagonista.NextFrame();
             }
             else if (SdlHardware.KeyPressed(SdlHardware.KEY_RIGHT))
             {
-                if (protagonista.PuedeMoverse(
-                        protagonista, mapa.Arboles, mapa.Edificios, npcs))
-                    MoverMundo(-10, 0);
-                else
-                    MoverMundo(20, 0);
+                Moverse(protagonista.GetVelocidad(), 0, Sprite.RIGHT);
                 BuscarCombateSalvaje();
-                protagonista.ChangeDirection(Sprite.RIGHT);
-                protagonista.NextFrame();
             }
             else if (SdlHardware.KeyPressed(SdlHardware.KEY_M))
             {
-                MenuJugador mj = new MenuJugador(protagonista, mapa);
+                SdlHardware.ResetScroll();
+                MenuJugador mj = new MenuJugador(protagonista, fondo, dialogo, this);
                 mj.Run();
             }
         }
 
         if (SdlHardware.KeyPressed(SdlHardware.KEY_K))
         {
+            SdlHardware.ResetScroll();
             SdlHardware.Pause(100);
             Pokemon.Run();
         }
+    }
+
+    private void DetectarColisiones()
+    {
+        bool colision = false;
+
+        foreach (Arbol arbol in mapa.Arboles)
+            if (protagonista.CollisionsWith(arbol))
+                colision = true;
+
+        foreach (Edificio edificio in mapa.Edificios)
+            if (protagonista.CollisionsWith(edificio))
+                colision = true;
+
+        foreach (Npc npc in mapa.Npcs)
+            if (protagonista.CollisionsWith(npc))
+                colision = true;
+
+        if(colision)
+            InvertirCoordenadas(true);
     }
 
     public void Run()
@@ -252,8 +253,11 @@ class Juego
         do
         {
             DibujarJuego();
-            GestionarConversaciones();
             ComprobarTeclas();
+            GestionarConversaciones();
+            DetectarColisiones();
+            nuevoScrollX = SdlHardware.startX;
+            nuevoScrollY = SdlHardware.startY;
             SdlHardware.Pause(40);
         } while (bucle);
     }

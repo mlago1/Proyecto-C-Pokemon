@@ -5,8 +5,8 @@
     {
         startX = -1;
         startY = -1;
-        width = 50;
-        height = 60;
+        width = 36;
+        height = 46;
         visible = true;
     }
 }

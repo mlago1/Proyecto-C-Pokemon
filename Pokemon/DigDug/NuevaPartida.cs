@@ -171,14 +171,13 @@ class NuevaPartida : Menu
         {
 
         }
-        nuevoJugador.guardarJugador("partidas/" + nombrePJ + ".txt", ref cargarMapa);
+        nuevoJugador.guardarJugador("partidas/" + nombrePJ + ".txt", ref fondo, ref dialogo, scrollX, scrollY);
         StreamWriter escribir = new StreamWriter("partidas/listaPartidas.txt", true);
         escribir.WriteLine(nombrePJ);
         escribir.Close();
-        //GuardarNpcsPredefinidos y cargarlos -- FUTURO
         Instrucciones i = new Instrucciones();
         i.Run();
-        Juego j = new Juego(nuevoJugador, cargarMapa);
+        Juego j = new Juego(nuevoJugador, fondo, dialogo);
         j.Run();
     }
 
@@ -194,6 +193,7 @@ class NuevaPartida : Menu
                     100, 100,
                     0xC0, 0xC0, 0xC0,
                     font24);
+
                 SdlHardware.WriteHiddenText("Pulsa espacio al terminar.",
                     50, 200,
                     0xC0, 0xC0, 0xC0,

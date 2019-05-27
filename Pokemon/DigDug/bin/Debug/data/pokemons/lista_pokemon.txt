@@ -1,3 +1,5 @@
 bulbasaur;data/pokemons/bulbasaur.png
 charmander;data/pokemons/charmander.png
 squirtle;data/pokemons/squirtle.png
+pikachu;data/pokemons/pikachu.png
+mew;data/pokemons/mew.png

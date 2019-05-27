@@ -6,10 +6,19 @@ abstract class Menu
 {
     protected Image bg;
     protected Font font24;
-    protected int seleccion, maxOpciones;
+    protected int seleccion, maxOpciones, scrollX, scrollY;
     protected short posicionFlecha;
     protected List<string> listaNombres;
     protected bool continuar;
+    protected Sprite fondo, dialogo;
+
+    public Menu()
+    {
+        fondo = new Sprite("data/fondo_juego.jpg");
+        dialogo = new Sprite("data/fondo_dialogo.png");
+        scrollX = scrollY = 0;
+        dialogo.MoveTo(0,550);
+    }
 
     public void SinPartidas()
     {

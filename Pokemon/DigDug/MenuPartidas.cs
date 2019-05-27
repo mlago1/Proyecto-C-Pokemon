@@ -54,7 +54,7 @@ class MenuPartidas : Menu
                 if (seleccion == 0)
                 {
                     seleccion = 2;
-                    posicionFlecha = 450;
+                    posicionFlecha = 500;
                 }
                 else
                 {

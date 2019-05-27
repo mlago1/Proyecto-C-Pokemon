@@ -28,6 +28,7 @@ class BorrarPartida : Menu
     public void BorrarPartidaSeleccionada()
     {
         File.Delete("partidas/" + nombrePartida + ".txt");
+        File.Delete("partidas/" + nombrePartida + ".txt_caja.txt");
         List<string> leerPartidas = new List<string>(File.ReadAllLines("partidas/listaPartidas.txt"));
         leerPartidas.Remove(nombrePartida);
         File.WriteAllLines("partidas/listaPartidas.txt", leerPartidas);
@@ -97,7 +98,7 @@ class BorrarPartida : Menu
                     if (seleccion == 1)
                     {
                         seleccion = maxOpciones;
-                        posicionFlecha = Convert.ToInt16(50 * maxOpciones);
+                        posicionFlecha = posicionFlecha = Convert.ToInt16(200 + (100 * (maxOpciones - 1)));
                     }
                     else
                     {
