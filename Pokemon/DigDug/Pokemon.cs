@@ -1,4 +1,4 @@
-﻿class Pokemon
+﻿public class Pokemon
 {
     public static void Main()
     {

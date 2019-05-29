@@ -100,6 +100,19 @@ class Combate : Menu
                         font35);
             SdlHardware.ShowHiddenScreen();
         } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        SdlHardware.Pause(100);
+        int dineroGanado = r.Next(500,700);
+        do
+        {
+            DibujarInterfaz();
+
+            SdlHardware.WriteHiddenText("Obtienes " + dineroGanado + " PokeDólares",
+                        80, 560,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            SdlHardware.ShowHiddenScreen();
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        prota.SetDinero(prota.GetDinero() + dineroGanado);
         continuar = false;
         SdlHardware.Pause(60);
     }

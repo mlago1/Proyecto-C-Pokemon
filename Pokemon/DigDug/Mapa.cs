@@ -8,6 +8,7 @@ public class Mapa
      public List<Edificio> Edificios { get; set; }
      public List<Hierba> Hierbas { get; set; }
      public List<Npc> Npcs { get; set; }
+     public List<Pc> Pcs { get; set; }
      Random r;
 
     public Mapa()
@@ -16,6 +17,7 @@ public class Mapa
         Edificios = new List<Edificio>();
         Hierbas = new List<Hierba>();
         Npcs = new List<Npc>();
+        Pcs = new List<Pc>();
         r = new Random();
     }
 
@@ -67,7 +69,7 @@ public class Mapa
 
         for (int i = 0; i < lineas.Count; i++)
         {
-            String linea = lineas[i];
+            string linea = lineas[i];
             actualY = i * aux.height;
 
             for (int j = 0; j < linea.Length; j++)
@@ -98,6 +100,12 @@ public class Mapa
                         Npc n = CargarNpc();
                         n.MoveTo(actualX, actualY);
                         Npcs.Add(n);
+                        break;
+
+                    case 'P':
+                        Pc p = new Pc("data/pc.png");
+                        p.MoveTo(actualX, actualY);
+                        Pcs.Add(p);
                         break;
                 }
 

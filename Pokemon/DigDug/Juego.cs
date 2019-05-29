@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-class Juego
+public class Juego
 {
     protected Jugador protagonista;
     protected bool bucle;
@@ -61,7 +61,11 @@ class Juego
         {
             edificio.DrawOnHiddenScreen();
         }
-        
+        foreach (Pc pc in mapa.Pcs)
+        {
+            pc.DrawOnHiddenScreen();
+        }
+
 
         foreach (Npc npc in mapa.Npcs)
         {
@@ -137,6 +141,15 @@ class Juego
     {
         if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
         {
+            foreach (Pc pc in mapa.Pcs)
+            {
+                if (protagonista.CollisionsWith(pc))
+                {
+                    SdlHardware.ResetScroll();
+                    SdlHardware.Pause(100);
+                    pc.Run(ref protagonista, viejoScrollX, viejoScrollY);
+                }
+            }
             foreach (Npc npc in mapa.Npcs)
             {
                 if (protagonista.CollisionsWith(npc))
@@ -238,6 +251,10 @@ class Juego
 
         foreach (Edificio edificio in mapa.Edificios)
             if (protagonista.CollisionsWith(edificio))
+                colision = true;
+
+        foreach (Pc pc in mapa.Pcs)
+            if (protagonista.CollisionsWith(pc))
                 colision = true;
 
         foreach (Npc npc in mapa.Npcs)

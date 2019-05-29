@@ -13,7 +13,7 @@
     public void DetectarTeclas()
     {
         SdlHardware.ShowHiddenScreen();
-        if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
+        if (SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE))
         {
             SdlHardware.Pause(100);
             continuar = false;
@@ -33,7 +33,7 @@
             100, 100,
             0xC0, 0xC0, 0xC0,
             font24);
-        SdlHardware.WriteHiddenText("Dinero: " + prota.GetDinero(),
+        SdlHardware.WriteHiddenText("Dinero: " + prota.GetDinero() + " PokeDólares",
             100, 150,
             0xC0, 0xC0, 0xC0,
             font24);
@@ -45,7 +45,7 @@
             100, 250,
             0xC0, 0xC0, 0xC0,
             font24);
-        SdlHardware.WriteHiddenText("Medallas: 0", //PROVISIONAL
+        SdlHardware.WriteHiddenText("Medallas: 0", 
            100, 300,
            0xC0, 0xC0, 0xC0,
            font24);
@@ -54,7 +54,7 @@
            0xC0, 0xC0, 0xC0,
            font24);
 
-        SdlHardware.WriteHiddenText("Pulsa Espacio para salir",
+        SdlHardware.WriteHiddenText("Pulsa <-- para salir",
                 100, 450,
                 0xC0, 0xC0, 0xC0,
                 font24);

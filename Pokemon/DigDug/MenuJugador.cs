@@ -33,22 +33,29 @@ class MenuJugador : Menu
                 100, 100,
                 0xC0, 0xC0, 0xC0,
                 font24);
-            SdlHardware.WriteHiddenText("Pulsa Espacio para",
-                100, 150,
+            SdlHardware.WriteHiddenText("Pulsa Espacio para salir de ",
+                100, 200,
                 0xC0, 0xC0, 0xC0,
                 font24);
-            SdlHardware.WriteHiddenText("volver",
-                100, 200,
+            SdlHardware.WriteHiddenText("la partida",
+                100, 250,
+                0xC0, 0xC0, 0xC0,
+                font24);
+            SdlHardware.WriteHiddenText("Pulsa <-- para volver atrás",
+                100, 400,
                 0xC0, 0xC0, 0xC0,
                 font24);
 
             if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
             {
                 SdlHardware.Pause(100);
+                Pokemon.Run();
             }
+
             SdlHardware.ShowHiddenScreen();
 
-        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC) &&
+            !SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE));
     }
 
     public void DetectarTeclas()

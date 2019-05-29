@@ -42,8 +42,7 @@ class Pokedex : Menu
 
     public void DetectarTeclas()
     {
-        SdlHardware.ShowHiddenScreen();
-        if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
+        if (SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE))
         {
             SdlHardware.Pause(100);
             continuar = false;
@@ -73,6 +72,11 @@ class Pokedex : Menu
            select);
         SdlHardware.DrawHiddenImage(dexImagenes[pokedex[seleccion]],400, 250);
 
+        SdlHardware.WriteHiddenText("Pulsa <-- para salir",
+                100, 600,
+                0xC0, 0xC0, 0xC0,
+                font24);
+
         SdlHardware.ShowHiddenScreen();
 
         if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
@@ -97,13 +101,6 @@ class Pokedex : Menu
                 seleccion--;
             }
         }
-
-        SdlHardware.WriteHiddenText("Pulsa Espacio para salir",
-                100, 600,
-                0xC0, 0xC0, 0xC0,
-                font24);
-
-        SdlHardware.ShowHiddenScreen();
 
         SdlHardware.Pause(40);
 

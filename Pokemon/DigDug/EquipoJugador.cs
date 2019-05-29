@@ -15,8 +15,7 @@ class EquipoJugador : Menu
 
     public void DetectarTeclas()
     {
-        SdlHardware.ShowHiddenScreen();
-        if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
+        if (SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE))
         {
             SdlHardware.Pause(100);
             continuar = false;
@@ -53,6 +52,12 @@ class EquipoJugador : Menu
            550, 200,
            0xC0, 0xC0, 0xC0,
            font24);
+
+        SdlHardware.WriteHiddenText("Pulsa <-- para salir",
+                100, 450,
+                0xC0, 0xC0, 0xC0,
+                font24);
+
         SdlHardware.ShowHiddenScreen();
 
         if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
@@ -81,13 +86,6 @@ class EquipoJugador : Menu
                 posicionFlecha -= 50;
             }
         }
-
-        SdlHardware.WriteHiddenText("Pulsa Espacio para salir",
-                100, 450,
-                0xC0, 0xC0, 0xC0,
-                font24);
-
-        SdlHardware.ShowHiddenScreen();
 
         SdlHardware.Pause(40);
 

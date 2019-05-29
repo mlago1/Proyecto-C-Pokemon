@@ -38,6 +38,7 @@ public class Jugador : Sprite
         this.velocidad = 10;
         Hablando = false;
         equipo = new List<Bestia>();
+        caja = new List<Bestia>();
     }
 
     public string GetNombre()
@@ -63,6 +64,11 @@ public class Jugador : Sprite
     public int GetDinero()
     {
         return dinero;
+    }
+
+    public void SetDinero(int dinero)
+    {
+        this.dinero = dinero;
     }
 
     public int GetVelocidad()

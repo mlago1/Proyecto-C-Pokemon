@@ -1,0 +1,1 @@
+data/pokemons/pikachu.png;pikachu;99;28;198;Salpicadura:Agua:0_Lanzallamas:Fuego:100_Pistola Agua:Agua:50
