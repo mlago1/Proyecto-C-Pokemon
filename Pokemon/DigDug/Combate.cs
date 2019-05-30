@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static Ataque;
 
 class Combate : Menu
@@ -37,6 +38,142 @@ class Combate : Menu
         DibujarInterfazSalvaje();
         DibujarInterfazSeleccionado();
         SdlHardware.DrawHiddenImage(fondo_opciones, 0, 534);
+    }
+
+    private void AbrirMochila(ref bool accionRealizada)
+    {
+        int seleccionMochila = 0;
+        int aux = 0;
+        int maxOpcionesMochila = prota.GetMochila().Count - 1;
+        int posicionFlechaMochila = 300;
+
+        bool objetoElegido = false ;
+        Objeto objetoSeleccionado = null;
+
+        do
+        {
+            SdlHardware.ClearScreen();
+            SdlHardware.DrawHiddenImage(new Image("data/menu_partidas.png"), 0, 0);
+            if (prota.GetMochila().Count == 0)
+            {
+                SdlHardware.WriteHiddenText("Tu mochila está vacia",
+                        100, 150,
+                        0xC0, 0xC0, 0xC0,
+                        font24);
+                SdlHardware.WriteHiddenText("Pulsa <-- para volver ",
+                        100, 200,
+                        0xC0, 0xC0, 0xC0,
+                        font24);
+                SdlHardware.WriteHiddenText("al combate",
+                        100, 250,
+                        0xC0, 0xC0, 0xC0,
+                        font24);
+            }
+            else
+            {
+                SdlHardware.WriteHiddenText("Pulsa Espacio para consumir un objeto",
+                        80, 150,
+                        0xC0, 0xC0, 0xC0,
+                        font24);
+                SdlHardware.WriteHiddenText("Pulsa <-- para volver al combate",
+                        80, 200,
+                        0xC0, 0xC0, 0xC0,
+                        font24);
+                SdlHardware.WriteHiddenText("-->",
+                        30, Convert.ToInt16(posicionFlechaMochila),
+                        0xC0, 0xC0, 0xC0,
+                        font24);
+                int altura = 300;
+                foreach (KeyValuePair<Objeto, int> kp in prota.GetMochila())
+                {
+                    SdlHardware.WriteHiddenText(kp.Key.Nombre + " x" + kp.Value,
+                        100, Convert.ToInt16(altura),
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+                    altura += 50;
+
+                }
+                altura = 300;
+
+                if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
+                {
+                    if (seleccionMochila == maxOpcionesMochila)
+                    {
+                        seleccionMochila = 0;
+                        posicionFlechaMochila = 300;
+                    }
+                    else
+                    {
+                        seleccionMochila++;
+                        posicionFlechaMochila += 50;
+                    }
+                }
+
+                if (SdlHardware.KeyPressed(SdlHardware.KEY_UP))
+                {
+                    if (seleccionMochila == 0)
+                    {
+                        seleccionMochila = maxOpcionesMochila;
+                        posicionFlechaMochila = 300 + (maxOpcionesMochila * 50);
+                    }
+                    else
+                    {
+                        seleccionMochila--;
+                        posicionFlechaMochila -= 50;
+                    }
+                }
+
+                if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
+                {
+                    objetoElegido = true;
+                    int i = 0;
+                    foreach (KeyValuePair<Objeto, int> kp in prota.GetMochila())
+                    {
+                        if(i == seleccionMochila)
+                        {
+                            objetoSeleccionado = kp.Key;
+                            aux = kp.Value - 1;
+                            break;
+                        }
+                        i++;
+                    }
+                    
+                    SdlHardware.Pause(100);
+                }
+            }
+            SdlHardware.ShowHiddenScreen();
+            SdlHardware.Pause(60);
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC) &&
+            !SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE));
+
+        SdlHardware.Pause(100);
+
+        if(objetoElegido)
+        {
+            
+            prota.GetMochila().Remove(objetoSeleccionado);
+            if (aux > 0)
+                prota.GetMochila().Add(objetoSeleccionado, aux);
+            do
+            {
+                DibujarInterfaz();
+
+                SdlHardware.WriteHiddenText(prota.GetNombre() + " usó " + objetoSeleccionado.Nombre,
+                            100, 560,
+                            0xC0, 0xC0, 0xC0,
+                            font35);
+                SdlHardware.ShowHiddenScreen();
+            } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+            SdlHardware.Pause(100);
+            if (objetoSeleccionado.GetType().Name == "Pocion")
+            {
+                seleccionado.SetVida(
+                    seleccionado.GetVida() + ((Pocion)objetoSeleccionado).hpRecuperados
+                        <= seleccionado.GetMaxVida() ? seleccionado.GetVida() + ((Pocion)objetoSeleccionado).hpRecuperados : seleccionado.GetMaxVida() );
+            }
+            accionRealizada = true;
+        }
+        SdlHardware.Pause(100);
     }
 
     private Bestia ObtenerPokemonDisponible()
@@ -325,6 +462,8 @@ class Combate : Menu
 
     private void TuTurno()
     {
+        bool accion = false;
+
         do
         {
             DibujarInterfaz();
@@ -386,7 +525,9 @@ class Combate : Menu
         {
             case 0: TusAtaques(); break;
             case 1: CapturarPokemon(); break;
-            case 2: Console.WriteLine("TO DO"); break;
+            case 2: AbrirMochila(ref accion);
+                if(!accion)
+                    TuTurno(); break;
             case 3: ComprobarPoderHuir(); break;
         }
     }

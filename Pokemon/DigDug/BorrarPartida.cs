@@ -25,14 +25,34 @@ class BorrarPartida : Menu
         }
     }
 
+    private void BorradoConExito()
+    {
+        do
+        {
+            SdlHardware.ClearScreen();
+            SdlHardware.DrawHiddenImage(bg, 0, 0);
+            SdlHardware.WriteHiddenText("Partida borrada con éxito",
+                100, 50,
+                0xC0, 0xC0, 0xC0,
+                font24);
+            SdlHardware.WriteHiddenText("Pulsa espacio para volver atrás",
+                100, 100,
+                0xC0, 0xC0, 0xC0,
+                font24);
+            SdlHardware.ShowHiddenScreen();
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+    }
+
     public void BorrarPartidaSeleccionada()
     {
         File.Delete("partidas/" + nombrePartida + ".txt");
         File.Delete("partidas/" + nombrePartida + ".txt_caja.txt");
+        File.Delete("partidas/" + nombrePartida + ".txt_mochila.txt");
         List<string> leerPartidas = new List<string>(File.ReadAllLines("partidas/listaPartidas.txt"));
         leerPartidas.Remove(nombrePartida);
         File.WriteAllLines("partidas/listaPartidas.txt", leerPartidas);
         SdlHardware.Pause(100);
+        BorradoConExito();
         MenuPartidas m = new MenuPartidas();
         m.Run();
     }

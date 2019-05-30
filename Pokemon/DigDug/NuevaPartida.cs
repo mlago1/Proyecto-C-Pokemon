@@ -175,8 +175,6 @@ class NuevaPartida : Menu
         StreamWriter escribir = new StreamWriter("partidas/listaPartidas.txt", true);
         escribir.WriteLine(nombrePJ);
         escribir.Close();
-        Instrucciones i = new Instrucciones();
-        i.Run();
         Juego j = new Juego(nuevoJugador, fondo, dialogo);
         j.Run();
     }

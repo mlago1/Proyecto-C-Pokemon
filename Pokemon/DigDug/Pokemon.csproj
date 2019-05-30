@@ -56,6 +56,7 @@
     <Compile Include="CargarPartida.cs" />
     <Compile Include="Combate.cs" />
     <Compile Include="Edificio.cs" />
+    <Compile Include="Enfermera.cs" />
     <Compile Include="EquipoJugador.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="Hierba.cs" />
@@ -70,7 +71,9 @@
     <Compile Include="MenuPartidas.cs" />
     <Compile Include="Npc.cs" />
     <Compile Include="NuevaPartida.cs" />
+    <Compile Include="Objeto.cs" />
     <Compile Include="Pc.cs" />
+    <Compile Include="Pocion.cs" />
     <Compile Include="Pokedex.cs" />
     <Compile Include="Pokemon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

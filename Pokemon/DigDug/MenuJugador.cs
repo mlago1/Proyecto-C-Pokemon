@@ -147,13 +147,13 @@ class MenuJugador : Menu
             100, 450,
             0xC0, 0xC0, 0xC0,
             font24);
-        SdlHardware.WriteHiddenText("Salir",
+        SdlHardware.WriteHiddenText("Volver a la partida",
             100, 500,
             0xC0, 0xC0, 0xC0,
             font24);
 
-        SdlHardware.WriteHiddenText("<--",
-                500, posicionFlecha,
+        SdlHardware.WriteHiddenText("-->",
+                30, posicionFlecha,
                 0xC0, 0xC0, 0xC0,
                 font24);
 

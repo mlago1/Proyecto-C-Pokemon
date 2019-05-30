@@ -38,7 +38,7 @@
             100, 300,
             0xC0, 0xC0, 0xC0,
             font24);
-        SdlHardware.WriteHiddenText("NPCs/Interactura en general",
+        SdlHardware.WriteHiddenText("Personajes/Interactuar en general",
             100, 350,
             0xC0, 0xC0, 0xC0,
             font24);

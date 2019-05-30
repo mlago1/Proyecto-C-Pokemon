@@ -11,6 +11,7 @@ public class Jugador : Sprite
     protected int tiempoJugado;
     public bool Hablando { get; set; } 
     protected List<Bestia> equipo, caja;
+    protected Dictionary<Objeto,int> mochila;
 
     public Jugador(string nombre, string genero)
     {
@@ -31,6 +32,7 @@ public class Jugador : Sprite
         Hablando = false;
         equipo = new List<Bestia>();
         caja = new List<Bestia>();
+        mochila = new Dictionary<Objeto, int>();
     }
 
     public Jugador()
@@ -39,6 +41,7 @@ public class Jugador : Sprite
         Hablando = false;
         equipo = new List<Bestia>();
         caja = new List<Bestia>();
+        mochila = new Dictionary<Objeto, int>();
     }
 
     public string GetNombre()
@@ -54,6 +57,11 @@ public class Jugador : Sprite
     public List<Bestia> GetCaja()
     {
         return caja;
+    }
+
+    public Dictionary<Objeto, int> GetMochila()
+    {
+        return mochila;
     }
 
     public string GetGenero()
@@ -197,6 +205,14 @@ public class Jugador : Sprite
                 escribir.WriteLine();
             }
             escribir.Close();
+            escribir = new StreamWriter(partida + "_mochila.txt");
+            foreach (KeyValuePair<Objeto,int> kp in mochila)
+            {
+                if(kp.Key.GetType().Name == "Pocion")
+                    escribir.WriteLine(kp.Key.GetType().Name + ";" +
+                        kp.Key.Nombre + ";" + ((Pocion)kp.Key).hpRecuperados + ";" + kp.Value);
+            }
+            escribir.Close();
         }
         catch(Exception e)
         {
@@ -277,6 +293,23 @@ public class Jugador : Sprite
             }
 
             leer.Close();
+
+            leer = new StreamReader(partida + "_mochila.txt");
+            linea = leer.ReadLine();
+            while (linea != null)
+            {
+                string[] cortar = linea.Split(';');
+                switch(cortar[0])
+                {
+                    case "Pocion":
+                        mochila.Add(new Pocion(cortar[1],
+                            Convert.ToInt32(cortar[2])),Convert.ToInt32(cortar[3])); break;
+                }
+                linea = leer.ReadLine();
+            }
+
+            leer.Close();
+
         }
         catch (Exception e)
         {

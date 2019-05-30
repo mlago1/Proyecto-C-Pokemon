@@ -102,6 +102,18 @@ public class Mapa
                         Npcs.Add(n);
                         break;
 
+                    case 'F':
+                        Enfermera ef = new Enfermera(
+                            new string[4][] {
+                            new string[] {"data/npcs/enfermera/enfermeraRightBase.png"},
+                            new string[] {"data/npcs/enfermera/enfermeraLeftBase.png"},
+                            new string[] {"data/npcs/enfermera/enfermeraUpBase.png"},
+                            new string[] {"data/npcs/enfermera/enfermeraDownBase.png"}});
+                        ef.Dialogo.Add("Tus pokemons han sido curados");
+                        ef.MoveTo(actualX, actualY);
+                        Npcs.Add(ef);
+                        break;
+
                     case 'P':
                         Pc p = new Pc("data/pc.png");
                         p.MoveTo(actualX, actualY);

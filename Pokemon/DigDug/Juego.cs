@@ -24,6 +24,7 @@ public class Juego
         mapa = new Mapa();
         mapa.CargarMapa("data/mapa.txt");
         dibujarDialogo = false;
+        protagonista.GetMochila().Add(new Pocion("Pocion",50),1);
     }
 
     private Bestia CargarPokemonSalvaje()
@@ -46,6 +47,9 @@ public class Juego
 
     private void DibujarJuego()
     {
+        bool dibujarDialogo = false;
+        Npc npcHablando = null;
+
         SdlHardware.ClearScreen();
         fondo.DrawOnHiddenScreen();
         foreach (Hierba hierba in mapa.Hierbas)
@@ -72,13 +76,19 @@ public class Juego
             npc.DrawOnHiddenScreen();
             if (npc.Hablando)
             {
-                dialogo.DrawOnHiddenScreen();
-                SdlHardware.WriteHiddenText(
-                    npc.Dialogo[npc.IndiceDialogo],
-                    Convert.ToInt16(dialogo.x + 50), Convert.ToInt16(dialogo.y + 50),
-                    0, 0, 0,
-                    font18);
+                dibujarDialogo = true;
+                npcHablando = npc;
             }
+        }
+
+        if(dibujarDialogo)
+        {
+            dialogo.DrawOnHiddenScreen();
+            SdlHardware.WriteHiddenText(
+                npcHablando.Dialogo[npcHablando.IndiceDialogo],
+                Convert.ToInt16(dialogo.x + 50), Convert.ToInt16(dialogo.y + 50),
+                0, 0, 0,
+                font18);
         }
 
         SdlHardware.ShowHiddenScreen();
@@ -192,6 +202,13 @@ public class Juego
                         npc.Hablando = false;
                         protagonista.Hablando = false;
                         npc.IndiceDialogo = 0;
+                        if(npc.GetType().Name == "Enfermera")
+                        {
+                            foreach (Bestia b in protagonista.GetEquipo())
+                            {
+                                b.SetVida(b.GetMaxVida());
+                            }
+                        }
                     }
                     SdlHardware.Pause(40);
                 }
