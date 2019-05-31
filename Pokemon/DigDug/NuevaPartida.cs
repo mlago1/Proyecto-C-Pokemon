@@ -169,9 +169,13 @@ class NuevaPartida : Menu
         }
         catch (Exception e)
         {
-
+            Menu.Error();
         }
-        nuevoJugador.guardarJugador("partidas/" + nombrePJ + ".txt", ref fondo, ref dialogo, scrollX, scrollY);
+        nuevoJugador.GetMochila().Add(new Pocion("Pocion", 50), 3);
+        nuevoJugador.GetMochila().Add(new Pocion("SuperPocion", 100), 3);
+        nuevoJugador.GetMochila().Add(new Pocion("HiperPocion", 150), 3);
+        nuevoJugador.guardarJugador("partidas/" + nombrePJ + ".txt", ref fondo,
+            ref dialogo, scrollX, scrollY);
         StreamWriter escribir = new StreamWriter("partidas/listaPartidas.txt", true);
         escribir.WriteLine(nombrePJ);
         escribir.Close();
@@ -230,7 +234,8 @@ class NuevaPartida : Menu
                         indiceGenero++;
                     else
                         indiceGenero = 0;
-                    posicionFlecha = posicionFlecha == 300 ? Convert.ToInt16(posicionFlecha + 250) : Convert.ToInt16(300);
+                    posicionFlecha = posicionFlecha == 300 ?
+                        Convert.ToInt16(posicionFlecha + 250) : Convert.ToInt16(300);
                     SdlHardware.Pause(1);
                 }
                 if (SdlHardware.KeyPressed(SdlHardware.KEY_UP))
@@ -239,7 +244,8 @@ class NuevaPartida : Menu
                         indiceGenero--;
                     else
                         indiceGenero = 1;
-                    posicionFlecha = posicionFlecha == 550 ? Convert.ToInt16(posicionFlecha - 250) : Convert.ToInt16(550);
+                    posicionFlecha = posicionFlecha == 550 ?
+                        Convert.ToInt16(posicionFlecha - 250) : Convert.ToInt16(550);
                     SdlHardware.Pause(1);
                 }
                 if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))

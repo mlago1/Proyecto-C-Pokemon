@@ -47,7 +47,7 @@ public class Mapa
         }
         catch (Exception e)
         {
-
+            Menu.Error();
         }
         return devolver;
     }

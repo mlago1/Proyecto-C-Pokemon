@@ -35,15 +35,16 @@ class BorrarPartida : Menu
                 100, 50,
                 0xC0, 0xC0, 0xC0,
                 font24);
-            SdlHardware.WriteHiddenText("Pulsa espacio para volver atrás",
+            SdlHardware.WriteHiddenText("Pulsa <-- para volver atrás",
                 100, 100,
                 0xC0, 0xC0, 0xC0,
                 font24);
             SdlHardware.ShowHiddenScreen();
-        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        } while (!SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE));
+        SdlHardware.Pause(100);
     }
 
-    public void BorrarPartidaSeleccionada()
+    private void BorrarPartidaSeleccionada()
     {
         File.Delete("partidas/" + nombrePartida + ".txt");
         File.Delete("partidas/" + nombrePartida + ".txt_caja.txt");
@@ -62,6 +63,7 @@ class BorrarPartida : Menu
         if (maxOpciones == 0)
         {
             SinPartidas();
+            return;
         }
         else
         {
@@ -136,7 +138,7 @@ class BorrarPartida : Menu
                 if (SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE))
                 {
                     SdlHardware.Pause(100);
-                    Pokemon.Run();
+                    new MenuPartidas().Run();
                 }
                 SdlHardware.Pause(40);
             } while (!partidaElegida);

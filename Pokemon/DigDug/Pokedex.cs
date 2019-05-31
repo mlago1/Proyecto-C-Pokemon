@@ -36,7 +36,7 @@ class Pokedex : Menu
         }
         catch (Exception e)
         {
-
+            Menu.Error();
         }
     }
 

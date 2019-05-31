@@ -59,6 +59,9 @@ class SdlHardware
                 isThereJoystick = false;
         }
 
+        SdlMixer.Mix_OpenAudio(22050,
+             (short)SdlMixer.MIX_DEFAULT_FORMAT, 2, 1024);
+
         // Time lapse between two consecutive mouse clicks,
         // so that they are not too near
         mouseClickLapse = 10;

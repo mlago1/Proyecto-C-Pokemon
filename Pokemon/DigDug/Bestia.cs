@@ -67,10 +67,11 @@ public class Bestia : Sprite
 
     public void CargarAtaques()
     {
+        int numAtaquesMax = 4;
         try
         {
             string[] leer = File.ReadAllLines("data/pokemons/lista_ataques.txt");
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < numAtaquesMax; i++)
             {
                 int indiceRandom = r.Next(0, leer.Length);
                 string[] cortarLinea = leer[indiceRandom].Split(';');
@@ -83,11 +84,13 @@ public class Bestia : Sprite
                     }
                 }
                 if(control)
-                    this.ataques.Add(new Ataque.ataque(cortarLinea[0],cortarLinea[1],Convert.ToInt32(cortarLinea[2])));
+                    this.ataques.Add(
+                        new Ataque.ataque(cortarLinea[0],cortarLinea[1],
+                        Convert.ToInt32(cortarLinea[2])));
             }
         }catch(Exception e)
         {
-
+            Menu.Error();
         }
     }
 }

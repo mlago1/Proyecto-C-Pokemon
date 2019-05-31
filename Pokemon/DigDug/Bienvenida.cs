@@ -8,6 +8,8 @@
 
     public void Run()
     {
+        Sound bgSound = new Sound("data/sonidos/pantalla_titulo.mp3");
+        bgSound.BackgroundPlay();
         do
         {
             SdlHardware.ClearScreen();
@@ -27,7 +29,7 @@
             SdlHardware.Pause(1);
 
         } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
-
+        bgSound.StopMusic();
         SdlHardware.Pause(100);
     }
 }

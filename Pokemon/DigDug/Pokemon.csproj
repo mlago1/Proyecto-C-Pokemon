@@ -78,6 +78,7 @@
     <Compile Include="Pokemon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SdlHardware.cs" />
+    <Compile Include="Sound.cs" />
     <Compile Include="Sprite.cs" />
   </ItemGroup>
   <ItemGroup>

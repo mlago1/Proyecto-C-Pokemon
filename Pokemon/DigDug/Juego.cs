@@ -3,6 +3,7 @@ using System.IO;
 
 public class Juego
 {
+    Sound bgSound;
     protected Jugador protagonista;
     protected bool bucle;
     protected Sprite fondo, dialogo;
@@ -11,7 +12,7 @@ public class Juego
     protected bool dibujarDialogo;
     Random r;
     int viejoX, viejoY, viejoFondoX, viejoFondoY, viejoDialogoX, viejoDialogoY;
-    public short viejoScrollX, viejoScrollY, nuevoScrollX, nuevoScrollY;
+    public short viejoScrollX, viejoScrollY;
 
     public Juego(Jugador protagonista, Sprite fondo, Sprite dialogo)
     {
@@ -24,7 +25,8 @@ public class Juego
         mapa = new Mapa();
         mapa.CargarMapa("data/mapa.txt");
         dibujarDialogo = false;
-        protagonista.GetMochila().Add(new Pocion("Pocion",50),1);
+        bgSound = new Sound("data/sonidos/fondo.mp3");
+        bgSound.BackgroundPlay();
     }
 
     private Bestia CargarPokemonSalvaje()
@@ -35,12 +37,13 @@ public class Juego
             string[] leer = File.ReadAllLines("data/pokemons/lista_pokemon.txt"); 
             int indice = r.Next(0,leer.Length);
             SdlHardware.Pause(100);
-            devolver = new Bestia(leer[indice].Split(';')[0], leer[indice].Split(';')[1]);
+            devolver = new Bestia(leer[indice].Split(';')[0],
+                leer[indice].Split(';')[1]);
             devolver.CargarAtaques();
         }
         catch(Exception e)
         {
-
+            Menu.Error();
         }
         return devolver;
     }
@@ -81,7 +84,7 @@ public class Juego
             }
         }
 
-        if(dibujarDialogo)
+        if(dibujarDialogo && npcHablando.Dialogo.Count > 0)
         {
             dialogo.DrawOnHiddenScreen();
             SdlHardware.WriteHiddenText(
@@ -99,7 +102,8 @@ public class Juego
         protagonista.MoveTo(protagonista.x + X, protagonista.y + Y);
         fondo.MoveTo(fondo.x + X, fondo.y + Y);
         dialogo.MoveTo(dialogo.x + X, dialogo.y + Y);
-        SdlHardware.ScrollTo(Convert.ToInt16(SdlHardware.startX - X), Convert.ToInt16(SdlHardware.startY - Y));
+        SdlHardware.ScrollTo(Convert.ToInt16(SdlHardware.startX - X),
+            Convert.ToInt16(SdlHardware.startY - Y));
         protagonista.ChangeDirection(direccion);
         protagonista.NextFrame();
     }
@@ -141,7 +145,9 @@ public class Juego
                     Combate combate = new Combate(
                         ref protagonista,CargarPokemonSalvaje(), this);
                     SdlHardware.ResetScroll();
+                    bgSound.StopMusic();
                     combate.Run();
+                    bgSound.BackgroundPlay();
                 }
             }
         }
@@ -157,7 +163,10 @@ public class Juego
                 {
                     SdlHardware.ResetScroll();
                     SdlHardware.Pause(100);
+                    bgSound.StopMusic();
+                    new Sound("data/sonidos/menu_jugador.mp3").PlayOnce();
                     pc.Run(ref protagonista, viejoScrollX, viejoScrollY);
+                    bgSound.BackgroundPlay();
                 }
             }
             foreach (Npc npc in mapa.Npcs)
@@ -202,7 +211,7 @@ public class Juego
                         npc.Hablando = false;
                         protagonista.Hablando = false;
                         npc.IndiceDialogo = 0;
-                        if(npc.GetType().Name == "Enfermera")
+                        if (npc.GetType().Name == "Enfermera")
                         {
                             foreach (Bestia b in protagonista.GetEquipo())
                             {
@@ -245,16 +254,11 @@ public class Juego
             else if (SdlHardware.KeyPressed(SdlHardware.KEY_M))
             {
                 SdlHardware.ResetScroll();
-                MenuJugador mj = new MenuJugador(protagonista, fondo, dialogo, this);
-                mj.Run();
+                bgSound.StopMusic();
+                new Sound("data/sonidos/menu_jugador.mp3").PlayOnce();
+                new MenuJugador(protagonista, fondo, dialogo, this).Run();
+                bgSound.BackgroundPlay();
             }
-        }
-
-        if (SdlHardware.KeyPressed(SdlHardware.KEY_K))
-        {
-            SdlHardware.ResetScroll();
-            SdlHardware.Pause(100);
-            Pokemon.Run();
         }
     }
 
@@ -290,8 +294,6 @@ public class Juego
             ComprobarTeclas();
             GestionarConversaciones();
             DetectarColisiones();
-            nuevoScrollX = SdlHardware.startX;
-            nuevoScrollY = SdlHardware.startY;
             SdlHardware.Pause(40);
         } while (bucle);
     }

@@ -1,0 +1,3 @@
+Pocion;Pocion;50;3
+Pocion;SuperPocion;100;3
+Pocion;HiperPocion;150;3

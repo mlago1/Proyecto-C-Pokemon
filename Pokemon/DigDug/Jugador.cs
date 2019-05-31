@@ -94,7 +94,7 @@ public class Jugador : Sprite
         this.pokemonsDiferentesCapturados = pokemonsDiferentesCapturados;
     }
 
-    public int GetTiempoJugado() //PROVISIONAL
+    public int GetTiempoJugado() 
     {
         return tiempoJugado;
     }
@@ -151,7 +151,8 @@ public class Jugador : Sprite
         currentDirection = LEFT;
     }
 
-    public void guardarJugador(string partida, ref Sprite fondo, ref Sprite dialogo, int scrollX, int scrollY)
+    public void guardarJugador(string partida, ref Sprite fondo,
+        ref Sprite dialogo, int scrollX, int scrollY)
     {
         try
         {
@@ -174,7 +175,9 @@ public class Jugador : Sprite
 
             foreach (Bestia bestia in equipo)
             {
-                escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" + bestia.GetNivel() + ";" + bestia.GetVida() + ";" + bestia.GetMaxVida() + ";");
+                escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" +
+                    bestia.GetNivel() + ";" + bestia.GetVida() + ";" + bestia.GetMaxVida() + ";");
+
                 for(int i = 0; i < bestia.GetAtaques().Count ; i++)
                 {
                     escribir.Write(bestia.GetAtaques()[i].nombre);
@@ -191,7 +194,9 @@ public class Jugador : Sprite
             escribir = new StreamWriter(partida+"_caja.txt");
             foreach (Bestia bestia in caja)
             {
-                escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" + bestia.GetNivel() + ";" + bestia.GetVida() + ";" + bestia.GetMaxVida() + ";");
+                escribir.Write(bestia.image.nombre + ";" + bestia.GetNombre() + ";" +
+                    bestia.GetNivel() + ";" + bestia.GetVida() + ";" + bestia.GetMaxVida() + ";");
+
                 for (int i = 0; i < bestia.GetAtaques().Count; i++)
                 {
                     escribir.Write(bestia.GetAtaques()[i].nombre);
@@ -216,7 +221,7 @@ public class Jugador : Sprite
         }
         catch(Exception e)
         {
-
+            Menu.Error();
         }
     }
 
@@ -313,7 +318,7 @@ public class Jugador : Sprite
         }
         catch (Exception e)
         {
-
+            Menu.Error();
         }
     }
 }

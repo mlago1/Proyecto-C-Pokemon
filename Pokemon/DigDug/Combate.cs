@@ -4,13 +4,15 @@ using static Ataque;
 
 class Combate : Menu
 {
-    Jugador prota, rival;
+    Sound bgSound;
+    Jugador prota;
     Image fondo_opciones;
     Juego juego;
     Font font35;
     Bestia salvaje, seleccionado;
     bool turno, capturando;
     Random r;
+    int cantidadMinima, cantidadMaxima;
 
     public Combate(ref Jugador prota, Bestia salvaje, Juego juego)
     {
@@ -29,6 +31,9 @@ class Combate : Menu
         this.juego = juego;
         salvaje.MoveTo(600, 70);
         fondo_opciones = new Image("data/dialogo_combate.png");
+        bgSound = new Sound("data/sonidos/combate.mp3");
+        cantidadMinima = 500;
+        cantidadMaxima = 700;
     }
 
     public override void DibujarInterfaz()
@@ -143,14 +148,12 @@ class Combate : Menu
             }
             SdlHardware.ShowHiddenScreen();
             SdlHardware.Pause(60);
-        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC) &&
+        } while (!objetoElegido &&
             !SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE));
-
         SdlHardware.Pause(100);
 
         if(objetoElegido)
         {
-            
             prota.GetMochila().Remove(objetoSeleccionado);
             if (aux > 0)
                 prota.GetMochila().Add(objetoSeleccionado, aux);
@@ -158,7 +161,8 @@ class Combate : Menu
             {
                 DibujarInterfaz();
 
-                SdlHardware.WriteHiddenText(prota.GetNombre() + " usó " + objetoSeleccionado.Nombre,
+                SdlHardware.WriteHiddenText(prota.GetNombre() + " usó " +
+                    objetoSeleccionado.Nombre,
                             100, 560,
                             0xC0, 0xC0, 0xC0,
                             font35);
@@ -169,7 +173,8 @@ class Combate : Menu
             {
                 seleccionado.SetVida(
                     seleccionado.GetVida() + ((Pocion)objetoSeleccionado).hpRecuperados
-                        <= seleccionado.GetMaxVida() ? seleccionado.GetVida() + ((Pocion)objetoSeleccionado).hpRecuperados : seleccionado.GetMaxVida() );
+                        <= seleccionado.GetMaxVida() ? seleccionado.GetVida() +
+                        ((Pocion)objetoSeleccionado).hpRecuperados : seleccionado.GetMaxVida() );
             }
             accionRealizada = true;
         }
@@ -238,7 +243,7 @@ class Combate : Menu
             SdlHardware.ShowHiddenScreen();
         } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
         SdlHardware.Pause(100);
-        int dineroGanado = r.Next(500,700);
+        int dineroGanado = r.Next(cantidadMinima,cantidadMaxima);
         do
         {
             DibujarInterfaz();
@@ -335,7 +340,8 @@ class Combate : Menu
                 if (seleccion == 0)
                 {
                     seleccion = seleccionado.GetAtaques().Count - 1;
-                    posicionFlecha = Convert.ToInt16(560 + ((seleccionado.GetAtaques().Count - 1) * 50));
+                    posicionFlecha = Convert.ToInt16(560 + (
+                        (seleccionado.GetAtaques().Count - 1) * 50));
                 }
                 else
                 {
@@ -371,7 +377,6 @@ class Combate : Menu
     private void CapturarPokemon() 
     {
         SdlHardware.Pause(100);
-
         capturando = true;
         bool haEscapado = false;
         int tickBall = 1;
@@ -384,9 +389,8 @@ class Combate : Menu
                         0xC0, 0xC0, 0xC0,
                         font35);
             for (int i = 0; i < tickBall; i++)
-            {
                 cadenaPuntos += ". ";
-            }
+
             SdlHardware.WriteHiddenText(cadenaPuntos,
                         100, 590,
                         0xC0, 0xC0, 0xC0,
@@ -421,43 +425,89 @@ class Combate : Menu
         }
         else
         {
+            PokemonCapturado();
+        }
+    }
+
+    private void PokemonCapturado()
+    {
+        do
+        {
+            DibujarInterfaz();
+            SdlHardware.WriteHiddenText("¡Has capturado a " + salvaje.GetNombre() + "!",
+                        100, 560,
+                        0xC0, 0xC0, 0xC0,
+                        font35);
+            SdlHardware.ShowHiddenScreen();
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        SdlHardware.Pause(100);
+
+        bool yaLoTiene = false;
+        foreach (Bestia b in prota.GetEquipo())
+        {
+            if (b.GetNombre() == salvaje.GetNombre())
+                yaLoTiene = true;
+        }
+        foreach(Bestia b in prota.GetCaja())
+        {
+            if (b.GetNombre() == salvaje.GetNombre())
+                yaLoTiene = true;
+        }
+
+        if(!yaLoTiene)
+            prota.SetPokemonsDiferentesCapturados(
+                prota.GetPokemonsDiferentesCapturados() + 1);
+
+        if (prota.GetEquipo().Count == 6)
+        {
             do
             {
                 DibujarInterfaz();
-                SdlHardware.WriteHiddenText("¡Has capturado a " + salvaje.GetNombre() + "!",
+                SdlHardware.WriteHiddenText(salvaje.GetNombre() + " fue enviado ",
                             100, 560,
+                            0xC0, 0xC0, 0xC0,
+                            font35);
+                SdlHardware.WriteHiddenText("al pc",
+                            100, 610,
                             0xC0, 0xC0, 0xC0,
                             font35);
                 SdlHardware.ShowHiddenScreen();
             } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
-            SdlHardware.Pause(100);
-            if (prota.GetEquipo().Count == 6)
-            {
-                do
-                {
-                    DibujarInterfaz();
-                    SdlHardware.WriteHiddenText(salvaje.GetNombre() + " fue enviado ",
-                                100, 560,
-                                0xC0, 0xC0, 0xC0,
-                                font35);
-                    SdlHardware.WriteHiddenText("al pc",
-                                100, 610,
-                                0xC0, 0xC0, 0xC0,
-                                font35);
-                    SdlHardware.ShowHiddenScreen();
-                } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
 
-                prota.GetCaja().Add(salvaje);
-            }
-            else
-            {
-                prota.GetEquipo().Add(salvaje);
-            }
-
-            capturando = false;
-            continuar = false;
-            prota.SetPokemonsDiferentesCapturados(prota.GetPokemonsDiferentesCapturados()+1);
+            prota.GetCaja().Add(salvaje);
         }
+        else
+        {
+            prota.GetEquipo().Add(salvaje);
+        }
+
+        capturando = false;
+        continuar = false;
+    }
+
+    private void DibujarTuTurno()
+    {
+        SdlHardware.WriteHiddenText("Atacar",
+                150, 560,
+                0xC0, 0xC0, 0xC0,
+                font24);
+
+        SdlHardware.WriteHiddenText("Capturar Pokemon",
+            150, 610,
+            0xC0, 0xC0, 0xC0,
+            font24);
+        SdlHardware.WriteHiddenText("Mochila",
+            150, 660,
+            0xC0, 0xC0, 0xC0,
+            font24);
+        SdlHardware.WriteHiddenText("Huir",
+            150, 710,
+            0xC0, 0xC0, 0xC0,
+            font24);
+        SdlHardware.WriteHiddenText("-->",
+            50, Convert.ToInt16(posicionFlecha),
+            0xC0, 0xC0, 0xC0,
+            font24);
     }
 
     private void TuTurno()
@@ -467,28 +517,7 @@ class Combate : Menu
         do
         {
             DibujarInterfaz();
-            SdlHardware.WriteHiddenText("Atacar",
-                150, 560,
-                0xC0, 0xC0, 0xC0,
-                font24);
-
-            SdlHardware.WriteHiddenText("Capturar Pokemon",
-                150, 610,
-                0xC0, 0xC0, 0xC0,
-                font24);
-            SdlHardware.WriteHiddenText("Mochila",
-                150, 660,
-                0xC0, 0xC0, 0xC0,
-                font24);
-            SdlHardware.WriteHiddenText("Huir",
-                150, 710,
-                0xC0, 0xC0, 0xC0,
-                font24);
-            SdlHardware.WriteHiddenText("-->",
-                50, Convert.ToInt16(posicionFlecha),
-                0xC0, 0xC0, 0xC0,
-                font24);
-
+            DibujarTuTurno();
             SdlHardware.ShowHiddenScreen();
 
             if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
@@ -606,6 +635,7 @@ class Combate : Menu
 
     public void Run()
     {
+        bgSound.BackgroundPlay();
         do
         {
             if (turno)
@@ -617,6 +647,7 @@ class Combate : Menu
             turno = turno ? false : true;
             SdlHardware.Pause(40);
         } while (continuar);
-        SdlHardware.ScrollTo(juego.nuevoScrollX, juego.nuevoScrollY);
+        SdlHardware.ScrollTo(juego.viejoScrollX, juego.viejoScrollY);
+        bgSound.StopMusic();
     }
 }

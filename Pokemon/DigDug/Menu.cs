@@ -20,7 +20,7 @@ abstract class Menu
         dialogo.MoveTo(0,550);
     }
 
-    public void SinPartidas()
+    protected void SinPartidas()
     {
         do
         {
@@ -30,21 +30,18 @@ abstract class Menu
                 50, 100,
                 0xC0, 0xC0, 0xC0,
                 font24);
-            SdlHardware.WriteHiddenText("Pulsa espacio para volver al menu principal",
+            SdlHardware.WriteHiddenText("Pulsa <-- para volver al menu principal",
                 50, 300,
                 0xC0, 0xC0, 0xC0,
                 font24);
-            if (SdlHardware.KeyPressed(SdlHardware.KEY_SPC))
-            {
-                SdlHardware.Pause(100);
-                Pokemon.Run();
-            }
             SdlHardware.ShowHiddenScreen();
         }
-        while (true);
+        while (!SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE));
+        SdlHardware.Pause(100);
+        Pokemon.Run();
     }
 
-    public void CargarNombres(ref List<string> listaNombres)
+    protected void CargarNombres(ref List<string> listaNombres)
     {
         try
         {
@@ -52,7 +49,7 @@ abstract class Menu
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            Menu.Error();
         }
 
         for(int i = 0; i < listaNombres.Count; i++)
@@ -65,5 +62,30 @@ abstract class Menu
     public virtual void DibujarInterfaz()
     {
 
+    }
+
+    public static void Error()
+    {
+        do
+        {
+            SdlHardware.ClearScreen();
+            SdlHardware.DrawHiddenImage(new Image("data/menu_partidas.png"), 0, 0);
+            SdlHardware.WriteHiddenText("Error Fatal",
+                    100, 50,
+                    0xC0, 0xC0, 0xC0,
+                    new Font("data/Joystix.ttf", 24));
+            SdlHardware.WriteHiddenText("Pulsa Espacio para volver",
+                    100, 100,
+                    0xC0, 0xC0, 0xC0,
+                    new Font("data/Joystix.ttf", 24));
+            SdlHardware.WriteHiddenText("a la pantalla principal",
+                    100, 150,
+                    0xC0, 0xC0, 0xC0,
+                    new Font("data/Joystix.ttf", 24));
+            SdlHardware.ShowHiddenScreen();
+
+        } while (!SdlHardware.KeyPressed(SdlHardware.KEY_SPC));
+        SdlHardware.Pause(100);
+        Pokemon.Run();
     }
 }

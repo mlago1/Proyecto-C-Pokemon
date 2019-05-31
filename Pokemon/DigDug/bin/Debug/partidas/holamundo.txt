@@ -1,0 +1,14 @@
+holamundo
+Hombre
+0
+1
+0
+557
+890
+45
+440
+45
+990
+-50
+-440
+data/pokemons/squirtle.png;squirtle;34;8;68;Lanzallamas:Fuego:100_Pistola Agua:Agua:50_Salpicadura:Agua:0

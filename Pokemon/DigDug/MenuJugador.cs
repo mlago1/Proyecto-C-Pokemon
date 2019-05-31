@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 class MenuJugador : Menu
 {
@@ -94,9 +95,10 @@ class MenuJugador : Menu
             {
                 case 1:;Pokedex p = new Pokedex(prota); p.Run(); break;
                 case 2: EquipoJugador ej = new EquipoJugador(prota); ej.Run() ; break;
-                case 3:; break;
+                case 3:VerMochila(); break;
                 case 4: InformacionJugador ij = new InformacionJugador(prota); ij.Run() ; break;
-                case 5: prota.guardarJugador("partidas/" + prota.GetNombre() + ".txt", ref fondo, ref dialogo, juego.nuevoScrollX, juego.nuevoScrollY);
+                case 5: prota.guardarJugador("partidas/" + prota.GetNombre() +
+                    ".txt", ref fondo, ref dialogo, juego.viejoScrollX, juego.viejoScrollY);
                     GuardadoCompletado(); break;
                 case 6: Instrucciones i = new Instrucciones() ; i.Run() ; break;
                 case 7: continuar = false; ; break;
@@ -108,6 +110,65 @@ class MenuJugador : Menu
             SdlHardware.Pause(100);
             continuar = false;
         }
+    }
+
+    private void VerMochila()
+    {
+        int actual = 0;
+        int maxOpciones = prota.GetMochila().Count - 1;
+        do
+        {
+            SdlHardware.ClearScreen();
+            SdlHardware.DrawHiddenImage(bg, 0, 0);
+            SdlHardware.WriteHiddenText("Mochila",
+                100, 50,
+                0xC0, 0xC0, 0xC0,
+                font24);
+            SdlHardware.WriteHiddenText("Pulsa <-- para volver atrás",
+                100, 100,
+                0xC0, 0xC0, 0xC0,
+                font24);
+            SdlHardware.WriteHiddenText("Pulsa ARRIBA o ABAJO para ", 
+                100, 200,
+                0xC0, 0xC0, 0xC0,
+                font24);
+            SdlHardware.WriteHiddenText("pasar objetos", 
+                100, 250,
+                0xC0, 0xC0, 0xC0,
+                font24);
+            SdlHardware.WriteHiddenText((actual + 1) + "/" + prota.GetMochila().Count,
+                100, 300,
+                0xC0, 0xC0, 0xC0,
+                font24);
+            int i = 0;
+            foreach (KeyValuePair<Objeto,int> kp in prota.GetMochila())
+            {
+                if (i == actual)
+                {
+                    SdlHardware.WriteHiddenText(kp.Key.Nombre + " x" + kp.Value,
+                        100, 350,
+                        0xC0, 0xC0, 0xC0,
+                        font24);
+                }
+                i++;
+            }
+            SdlHardware.ShowHiddenScreen();
+            if (SdlHardware.KeyPressed(SdlHardware.KEY_DOWN))
+            {
+                if (actual == maxOpciones)
+                    actual = 0;
+                else
+                    actual++;
+            }
+            if (SdlHardware.KeyPressed(SdlHardware.KEY_UP))
+            {
+                if (actual == 0)
+                    actual = maxOpciones;
+                else
+                    actual--;
+            }
+            SdlHardware.Pause(100);
+        } while (!SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE));
     }
 
     public override void DibujarInterfaz()
@@ -168,6 +229,6 @@ class MenuJugador : Menu
             DibujarInterfaz();
             DetectarTeclas();
         } while (continuar);
-        SdlHardware.ScrollTo(juego.nuevoScrollX,juego.nuevoScrollY);
+        SdlHardware.ScrollTo(juego.viejoScrollX,juego.viejoScrollY);
     }
 }

@@ -105,7 +105,7 @@ class CargarPartida : Menu
                 if (SdlHardware.KeyPressed(Tao.Sdl.Sdl.SDLK_BACKSPACE))
                 {
                     SdlHardware.Pause(100);
-                    Pokemon.Run();
+                    new MenuPartidas().Run();
                 }
                 SdlHardware.Pause(40);
             } while (!partidaElegida);
